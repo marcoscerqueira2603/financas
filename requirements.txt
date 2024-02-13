@@ -1,0 +1,13 @@
+openpyxl
+pip>=6.0
+lxml>=3.3.4
+pytest
+tk
+pillow
+tox
+gspread
+drive
+oauth2client
+plotly==5.9.0
+seaborn
+scipy
