@@ -45,9 +45,14 @@ st.title('Débito')
 
 debito_data = st.text_input('Insirir Data')
 debito_descrição =  st.text_input('Insirir Descrição')
+
 debito_classificacao = st.selectbox('Selecione o tipo:', ['Necessidade', 'Lazer - Corinthians', 'Lazer - Outros', 'Lazer - Comida', 'Comida','Casa', 'Passagem','Cabelo','Outros','Classificação'], key='class-debito')
 debito_valor = float(st.text_input('Insirir Valor'))
 
 
+if debito_valor == "":
+    debito_valor = 1.0
+else:
+    debito_valor = debito_valor
 
 debito
