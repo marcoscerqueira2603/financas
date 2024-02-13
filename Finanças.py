@@ -27,4 +27,19 @@ creds = ServiceAccountCredentials.from_json_keyfile_name("chave_api.json", scope
 client = gspread.authorize(creds)
 
 
+@st.cache_data(ttl=20)
+def load_data(sheets_url):
+    csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
+    return pd.read_csv(csv_url)
 
+debito = load_data(st.secrets["url_extrato_debito"])
+
+@st.cache_data(ttl=20)
+def load_data2(sheets_url):
+    csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
+    return pd.read_csv(csv_url)
+
+credito = load_data2(st.secrets["url_extrato_credito"])
+
+debito
+credito
