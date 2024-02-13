@@ -41,6 +41,9 @@ def load_data2(sheets_url):
 
 credito = load_data2(st.secrets["url_extrato_credito"])
 
-st.markdown('Débito')
+st.title('Débito')
+
+data = st.text_input('Insirir Data')
+
 
 debito
