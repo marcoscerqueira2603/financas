@@ -15,13 +15,12 @@ from scipy.stats import poisson
 
 
 st.set_page_config(
-    page_title="Apostas",
+    page_title="Finanças",
     layout="wide"
 )
 
 
-st.title('Página de Análise')
-
+st.title('Aba de Adição')
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name("chave_api.json", scope)
@@ -29,16 +28,3 @@ client = gspread.authorize(creds)
 
 
 
-@st.cache_data(ttl=20)
-def load_data(sheets_url):
-    csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
-    return pd.read_csv(csv_url)
-
-extrato_credito = load_data(st.secrets["url_tendencias_2linhas"])
-
-@st.cache_data(ttl=20)
-def load_data2(sheets_url):
-    csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
-    return pd.read_csv(csv_url)
-
-extrato_debito = 
