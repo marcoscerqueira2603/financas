@@ -53,4 +53,24 @@ if debito_valor == "":
 else:
     debito_valor = debito_valor
 debito_valor = float(debito_valor)
+
+
+novos_debitos = []
+
+with st.form('form'):
+    if st.form_submit_button('Adicionar Débito'):
+        novo_debito = [debito_data, debito_descrição, debito_classificacao, debito_valor]
+        novos_debitos = [].append(novo_debito)
+
+if novos_debitos:
+    novos_debitos_df = pd.DataFrame(novos_debitos, columns=debito.columns)
+    worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1lEIcy7vjH-X7U1t-toxC6V-ps39f6WQw2mruzTfx1VE/edit#gid=0').get_worksheet(0)
+    
+    # Obter o número de linhas existentes na planilha
+    num_rows = len(worksheet.get_all_values())
+    
+    # Inserir os dados nas linhas subsequentes
+    values_to_insert = novos_debitos_df.values.tolist()
+    worksheet.insert_rows(values_to_insert, num_rows + 1) 
+
 debito
