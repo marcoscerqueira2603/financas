@@ -60,7 +60,7 @@ novos_debitos = []
 with st.form('form'):
     if st.form_submit_button('Adicionar Débito'):
         novo_debito = [debito_data, debito_descrição, debito_classificacao, debito_valor]
-        novos_debitos = [].append(novo_debito)
+        novos_debitos.append(novo_debito)
 
 if novos_debitos:
     novos_debitos_df = pd.DataFrame(novos_debitos, columns=debito.columns)
