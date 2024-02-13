@@ -53,7 +53,9 @@ if debito_valor == "":
 else:
     debito_valor = debito_valor
 debito_valor = float(debito_valor)
-debito_mes = date.today(debito_data).month
+
+debito_date_obj = datetime.strptime(debito_data, "%d/%m/%Y")
+debito_mes = debito_date_obj.month
 
 novos_debitos = []
 
