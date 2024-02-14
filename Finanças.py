@@ -165,7 +165,7 @@ with tab1:
         
         with st.form('form credito'):
             for i in range(credito_parcelas):
-                if st.form_submit_button('Adicionar Gastor Crédito' + "Parcela " + credito_mes_parcela1):
+                if st.form_submit_button('Adicionar Gastor Crédito' + "Parcela " + str(credito_mes_parcela1)):
                     novo_credito = [credito_mes_parcela1, credito_descrição, credito_classificacao,  credito_cartao, credito_valor_parcela]
                     novos_creditos.append(novo_credito)
                     credito_mes_parcela1  = credito_mes_parcela1+1
