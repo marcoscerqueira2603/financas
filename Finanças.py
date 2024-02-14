@@ -193,3 +193,42 @@ with tab1:
     with st.expander("Receita"): 
         st.title("Receita")
         receita
+        receita_data = st.text_input('Insirir Data',key = 'insirir-data-receita ')
+
+        if receita_data  == "":
+            receita_data = "08/02/2000"
+        else:
+            receita_data = receita_data    
+
+        receita_date_obj = datetime.strptime(receita_data, "%d/%m/%Y")
+        receita_mes   = receita_date_obj.month      
+        receita_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-receita')
+        receita_classificacao = st.selectbox('Selecione o tipo:', ['Salário','VR','Bônus','13º','VR','Cartola','Apostas','Investimentos'], key='class-receita')
+
+        receita_valor = st.text_input('Insirir Valor', key = 'insirir-valor-receita')
+
+        if receita_valor == "":
+            receita_valor = 1.0
+        else:
+            receita_valor = receita_valor
+
+        receita_valor = float(receita_valor)
+
+        novos_receitas = []
+
+        with st.form('form receita'):
+            if st.form_submit_button('Adicionar Receitas'):
+                novo_receita = [receita_data, receita_mes, receita_descrição, receita_classificacao, receita_valor]
+                novos_receitas.append(novo_receita)
+
+        if novos_receitas:
+            novos_receitas_df = pd.DataFrame(novos_receitas, columns=receita.columns)
+            worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/11diab8Ytz3q9wN_ZbxWw60DBH5ydBUb152pIhmC0Etw/edit#gid=0').get_worksheet(0)
+            
+            # Obter o número de linhas existentes na planilha
+            num_rows = len(worksheet.get_all_values())
+            
+            # Inserir os dados nas linhas subsequentes
+            values_to_insert = novos_receitas_df.values.tolist()
+            worksheet.insert_rows(values_to_insert, num_rows + 1) 
+            
