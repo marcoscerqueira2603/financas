@@ -190,6 +190,6 @@ with tab1:
             values_to_insert = novos_creditos_df.values.tolist()
             worksheet.insert_rows(values_to_insert, num_rows + 1) 
             
-    with st.epander("Receita"): 
+    with st.expander("Receita"): 
         st.title("Receita")
         receita
