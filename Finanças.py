@@ -80,7 +80,7 @@ with tab1:
 
         novos_debitos = []
 
-        with st.form('form', key= 'form-debito'):
+        with st.form('form débito'):
             if st.form_submit_button('Adicionar Débito'):
                 novo_debito = [debito_data, debito_mes, debito_descrição, debito_classificacao, debito_valor]
                 novos_debitos.append(novo_debito)
@@ -126,7 +126,7 @@ with tab1:
 
             novos_vrs = []
 
-            with st.form('form', key="form-vr"):
+            with st.form('form vr'):
                 if st.form_submit_button('Adicionar Gastor VR'):
                     novo_vr = [vr_data, vr_mes, vr_descrição,vr_local,  vr_classificacao, vr_valor]
                     novos_vrs.append(novo_vr)
