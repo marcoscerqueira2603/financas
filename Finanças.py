@@ -40,11 +40,9 @@ def load_data2(sheets_url):
 
 credito = load_data2(st.secrets["url_extrato_credito"])
 
-tab1= st.tabs(['Incluir Dados'])
+tab1 = st.tabs(['Incluir Dados'])
 
-with tab1:
-   
-        
+with tab1:   
     st.title('Débito')
 
     #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
