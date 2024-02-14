@@ -40,7 +40,7 @@ def load_data2(sheets_url):
 
 credito = load_data2(st.secrets["url_extrato_credito"])
 
-tab1 = st.tabs(['Incluir Dados'])
+tab1,tab2 = st.tabs(['Incluir Dados', 'Construir'])
 
 with tab1:   
     st.title('Débito')
