@@ -47,6 +47,13 @@ def load_data3(sheets_url):
 
 vr = load_data3(st.secrets["url_extrato_vr"])
 
+@st.cache_data(ttl=20)
+def load_data4(sheets_url):
+    csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
+    return pd.read_csv(csv_url)
+
+receita = load_data4(st.secrets["url_extrato_receita"])
+
 tab1,tab2 = st.tabs(['Incluir Dados', 'Construir'])
 
 with tab1:   
@@ -144,6 +151,7 @@ with tab1:
                 vr
 
     with st.expander('Crédito'):
+    
         st.title('Crédito')
 
         credito_parcelas =  st.number_input('Inserir Parcelas', value=1)
@@ -182,3 +190,6 @@ with tab1:
             values_to_insert = novos_creditos_df.values.tolist()
             worksheet.insert_rows(values_to_insert, num_rows + 1) 
             
+    with st.epander("Receita"): 
+        st.title("Receita"):
+        receita
