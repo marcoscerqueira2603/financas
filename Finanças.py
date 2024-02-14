@@ -103,11 +103,11 @@ with tab1:
 
             #a partir do calculo de data conseguimos ter o mes e jogamos lá
 
-            vr_data = st.text_input('Insirir Data')
-            vr_descrição =  st.text_input('Insirir Descrição')
-            vr_local =  st.text_input('Insirir Local')
+            vr_data = st.text_input('Insirir Data',key = 'insirir-data-vr')
+            vr_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-vr')
+            vr_local =  st.text_input('Insirir Local', key = 'insirir-local-vr')
             vr_classificacao = st.selectbox('Selecione o tipo:', ['Almoço no escritório','Saídas','Saídas - Pitica','Rua','Casa','Outros'], key='class-vr')
-            vr_valor = st.text_input('Insirir Valor')
+            vr_valor = st.text_input('Insirir Valor', key = 'insirir-valor-vr')
 
             if vr_valor == "":
                 vr_valor = 1.0
