@@ -52,7 +52,7 @@ def load_data4(sheets_url):
     csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
     return pd.read_csv(csv_url)
 
-receita = load_data4(st.secrets["url_extrato_receita"])
+receita = load_data4(st.secrets["url_extrato_receitas"])
 
 tab1,tab2 = st.tabs(['Incluir Dados', 'Construir'])
 
