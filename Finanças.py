@@ -170,7 +170,7 @@ with tab1:
                     novos_creditos.append(novo_credito)
                     credito_mes_parcela1  = credito_mes_parcela1+1
 
-        if novos_vrs:
+        if novos_creditos:
             novos_creditos_df = pd.DataFrame(novos_creditos, columns=credito.columns)
             worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1xU7NwhHQkMGcF742y-tj9MjuK7XYnNhVt9r8dV60ofc/edit#gid=0').get_worksheet(0)
             
