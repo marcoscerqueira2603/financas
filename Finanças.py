@@ -87,3 +87,5 @@ with tab1:
         # Inserir os dados nas linhas subsequentes
         values_to_insert = novos_debitos_df.values.tolist()
         worksheet.insert_rows(values_to_insert, num_rows + 1) 
+with tab2:
+    credito
