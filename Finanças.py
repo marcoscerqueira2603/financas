@@ -192,7 +192,7 @@ with tab1:
             
     with st.expander("Receita"): 
         st.title("Receita")
-        receita
+        
         receita_data = st.text_input('Insirir Data',key = 'insirir-data-receita ')
 
         if receita_data  == "":
