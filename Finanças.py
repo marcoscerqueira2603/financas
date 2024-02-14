@@ -42,16 +42,27 @@ credito = load_data2(st.secrets["url_extrato_credito"])
 
 st.title('Débito')
 
+#adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
+
+#a partir do calculo de data conseguimos ter o mes e jogamos lá
+
 debito_data = st.text_input('Insirir Data')
 debito_descrição =  st.text_input('Insirir Descrição')
 
 debito_classificacao = st.selectbox('Selecione o tipo:', ['Necessidade', 'Lazer - Corinthians', 'Lazer - Outros', 'Lazer - Comida', 'Comida','Casa', 'Passagem','Cabelo','Outros','Classificação'], key='class-debito')
 debito_valor = st.text_input('Insirir Valor')
+
 if debito_valor == "":
     debito_valor = 1.0
 else:
     debito_valor = debito_valor
+
 debito_valor = float(debito_valor)
+
+if debito_data  == "":
+    debito_data = "08/02/2000"
+else:
+    debito_data = debito_data    
 
 debito_date_obj = datetime.strptime(debito_data, "%d/%m/%Y")
 debito_mes   = debito_date_obj.month
