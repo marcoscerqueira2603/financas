@@ -191,5 +191,5 @@ with tab1:
             worksheet.insert_rows(values_to_insert, num_rows + 1) 
             
     with st.epander("Receita"): 
-        st.title("Receita"):
+        st.title("Receita")
         receita
