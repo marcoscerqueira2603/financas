@@ -147,3 +147,16 @@ with tab1:
         st.title('Crédito')
 
         credito_parcelas =  st.number_input('Inserir Parcelas', value=1)
+        credito_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-credito')
+        credito_classificacao = st.selectbox('Selecione o tipo:', ['Faturas 2023','Presente Pitica','Presentes - Família','Lazer','Roupas','Compras Minhas','Outros'], key='class-credito')
+        credito_cartao = st.selectbox('Selecione o cartão:', ['Inter','Nubank','C6'], key='cartao-credito')
+        credito_valor = st.text_input('Insirir Valor Crédito', key = 'insirir-valor-credito')
+    
+        if credito_valor == "":
+            credito_valor = 100.0
+        else:
+            credito_valor = credito_valor
+
+        credito_valor = float(credito_valor)
+
+        credito_valor_parcela = round(credito_valor/credito_parcelas,2)
