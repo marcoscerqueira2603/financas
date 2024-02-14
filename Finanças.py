@@ -164,7 +164,7 @@ with tab1:
         novos_creditos = []
         
         with st.form('form credito'):
-            if st.form_submit_button('Adicionar Gastor Crédito'):
+            if st.form_submit_button('Adicionar Gasto Crédito'):
                 for i in range(credito_parcelas):
                     novo_credito = [credito_mes_parcela1, credito_descrição, credito_classificacao,  credito_cartao, credito_valor_parcela]
                     novos_creditos.append(novo_credito)
@@ -180,4 +180,4 @@ with tab1:
             # Inserir os dados nas linhas subsequentes
             values_to_insert = novos_creditos_df.values.tolist()
             worksheet.insert_rows(values_to_insert, num_rows + 1) 
-            vr
+            
