@@ -43,48 +43,49 @@ credito = load_data2(st.secrets["url_extrato_credito"])
 tab1,tab2 = st.tabs(['Incluir Dados', 'Construir'])
 
 with tab1:   
-    st.title('Débito')
+    with st.expander('Débito'):
+        st.title('Débito')
 
-    #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
+        #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
 
-    #a partir do calculo de data conseguimos ter o mes e jogamos lá
+        #a partir do calculo de data conseguimos ter o mes e jogamos lá
 
-    debito_data = st.text_input('Insirir Data')
-    debito_descrição =  st.text_input('Insirir Descrição')
+        debito_data = st.text_input('Insirir Data')
+        debito_descrição =  st.text_input('Insirir Descrição')
 
-    debito_classificacao = st.selectbox('Selecione o tipo:', ['Necessidade', 'Lazer - Corinthians', 'Lazer - Outros', 'Lazer - Comida', 'Comida','Casa', 'Passagem','Cabelo','Outros','Classificação'], key='class-debito')
-    debito_valor = st.text_input('Insirir Valor')
+        debito_classificacao = st.selectbox('Selecione o tipo:', ['Necessidade', 'Lazer - Corinthians', 'Lazer - Outros', 'Lazer - Comida', 'Comida','Casa', 'Passagem','Cabelo','Outros','Classificação'], key='class-debito')
+        debito_valor = st.text_input('Insirir Valor')
 
-    if debito_valor == "":
-        debito_valor = 1.0
-    else:
-        debito_valor = debito_valor
+        if debito_valor == "":
+            debito_valor = 1.0
+        else:
+            debito_valor = debito_valor
 
-    debito_valor = float(debito_valor)
+        debito_valor = float(debito_valor)
 
-    if debito_data  == "":
-        debito_data = "08/02/2000"
-    else:
-        debito_data = debito_data    
+        if debito_data  == "":
+            debito_data = "08/02/2000"
+        else:
+            debito_data = debito_data    
 
-    debito_date_obj = datetime.strptime(debito_data, "%d/%m/%Y")
-    debito_mes   = debito_date_obj.month
+        debito_date_obj = datetime.strptime(debito_data, "%d/%m/%Y")
+        debito_mes   = debito_date_obj.month
 
-    novos_debitos = []
+        novos_debitos = []
 
-    with st.form('form'):
-        if st.form_submit_button('Adicionar Débito'):
-            novo_debito = [debito_data, debito_mes, debito_descrição, debito_classificacao, debito_valor]
-            novos_debitos.append(novo_debito)
+        with st.form('form'):
+            if st.form_submit_button('Adicionar Débito'):
+                novo_debito = [debito_data, debito_mes, debito_descrição, debito_classificacao, debito_valor]
+                novos_debitos.append(novo_debito)
 
-    if novos_debitos:
-        novos_debitos_df = pd.DataFrame(novos_debitos, columns=debito.columns)
-        worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1lEIcy7vjH-X7U1t-toxC6V-ps39f6WQw2mruzTfx1VE/edit#gid=0').get_worksheet(0)
-        
-        # Obter o número de linhas existentes na planilha
-        num_rows = len(worksheet.get_all_values())
-        
-        # Inserir os dados nas linhas subsequentes
-        values_to_insert = novos_debitos_df.values.tolist()
-        worksheet.insert_rows(values_to_insert, num_rows + 1) 
+        if novos_debitos:
+            novos_debitos_df = pd.DataFrame(novos_debitos, columns=debito.columns)
+            worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1lEIcy7vjH-X7U1t-toxC6V-ps39f6WQw2mruzTfx1VE/edit#gid=0').get_worksheet(0)
+            
+            # Obter o número de linhas existentes na planilha
+            num_rows = len(worksheet.get_all_values())
+            
+            # Inserir os dados nas linhas subsequentes
+            values_to_insert = novos_debitos_df.values.tolist()
+            worksheet.insert_rows(values_to_insert, num_rows + 1) 
 
