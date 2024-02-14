@@ -57,11 +57,11 @@ with tab1:
 
         #a partir do calculo de data conseguimos ter o mes e jogamos lá
 
-        debito_data = st.text_input('Insirir Data')
-        debito_descrição =  st.text_input('Insirir Descrição')
+        debito_data = st.text_input('Insirir Data', key = "inserir-data-debito")
+        debito_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-debito")
 
         debito_classificacao = st.selectbox('Selecione o tipo:', ['Necessidade', 'Lazer - Corinthians', 'Lazer - Outros', 'Lazer - Comida', 'Comida','Casa', 'Passagem','Cabelo','Outros','Classificação'], key='class-debito')
-        debito_valor = st.text_input('Insirir Valor')
+        debito_valor = st.text_input('Insirir Valor', key = "inserir-valor-debito")
 
         if debito_valor == "":
             debito_valor = 1.0
@@ -80,7 +80,7 @@ with tab1:
 
         novos_debitos = []
 
-        with st.form('form'):
+        with st.form('form', key= 'form-debito'):
             if st.form_submit_button('Adicionar Débito'):
                 novo_debito = [debito_data, debito_mes, debito_descrição, debito_classificacao, debito_valor]
                 novos_debitos.append(novo_debito)
@@ -126,7 +126,7 @@ with tab1:
 
             novos_vrs = []
 
-            with st.form('form'):
+            with st.form('form', "form-vr"):
                 if st.form_submit_button('Adicionar Gastor VR'):
                     novo_vr = [vr_data, vr_mes, vr_descrição,vr_local,  vr_classificacao, vr_valor]
                     novos_vrs.append(novo_vr)
