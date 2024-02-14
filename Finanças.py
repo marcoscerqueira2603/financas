@@ -146,4 +146,4 @@ with tab1:
     with st.expander('Crédito'):
         st.title('Crédito')
 
-        credito
+        credito_parcelas =  st.number_input('Inserir Parcelas', value=1)
