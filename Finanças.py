@@ -162,8 +162,10 @@ with tab1:
 
         credito_valor_parcela = round(credito_valor/credito_parcelas,2)
         novos_creditos = []
-        for i in range(credito_parcelas):
-            with st.form('form credito'):
+        
+        with st.form('form credito'):
+            for i in range(credito_parcelas):
+
                 if st.form_submit_button('Adicionar Gastor Crédito'):
                     novo_credito = [credito_mes_parcela1, credito_descrição, credito_classificacao,  credito_cartao, credito_valor_parcela]
                     novos_creditos.append(novo_credito)
