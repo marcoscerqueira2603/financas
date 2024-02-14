@@ -143,3 +143,7 @@ with tab1:
                 worksheet.insert_rows(values_to_insert, num_rows + 1) 
                 vr
 
+    with st.expander('Crédito'):
+        st.title('Crédito')
+
+        credito
