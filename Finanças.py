@@ -1,4 +1,3 @@
-
 from calendar import c
 import streamlit as st
 import pandas as pd
@@ -55,7 +54,7 @@ else:
 debito_valor = float(debito_valor)
 
 debito_date_obj = datetime.strptime(debito_data, "%d/%m/%Y")
-debito_mes = debito_date_obj.month
+debito_mes   = debito_date_obj.month
 
 novos_debitos = []
 
