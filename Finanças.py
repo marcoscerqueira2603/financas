@@ -170,4 +170,14 @@ with tab1:
                     novos_creditos.append(novo_credito)
                     credito_mes_parcela1  = credito_mes_parcela1+1
 
-        novos_creditos
+        if novos_vrs:
+            novos_creditos_df = pd.DataFrame(novos_creditos, columns=credito.columns)
+            worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1xU7NwhHQkMGcF742y-tj9MjuK7XYnNhVt9r8dV60ofc/edit#gid=0').get_worksheet(0)
+            
+            # Obter o número de linhas existentes na planilha
+            num_rows = len(worksheet.get_all_values())
+            
+            # Inserir os dados nas linhas subsequentes
+            values_to_insert = novos_creditos_df.values.tolist()
+            worksheet.insert_rows(values_to_insert, num_rows + 1) 
+            vr
