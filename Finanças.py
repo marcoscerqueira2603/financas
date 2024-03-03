@@ -190,14 +190,13 @@ with tab1:
         st.title("Receita")
         
         receita_data = st.text_input('Insirir Data',key = 'insirir-data-receita ')
-
+        receita_mes_ref = st.selectbox('Selecione o mês referência:', ['1 - janeiro', '2 - fevereiro', '3 - março', '4 - abril', '5 - maio','6 - junho', '7 - julho','8 - agosto','9 - setembro','10 - outubro','11 - novembro','12 - dezembro'], key='class-mesref_reeitas')
         if receita_data  == "":
             receita_data = "08/02/2000"
         else:
             receita_data = receita_data    
 
-        receita_date_obj = datetime.strptime(receita_data, "%d/%m/%Y")
-        receita_mes   = receita_date_obj.month      
+      
         receita_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-receita')
         receita_classificacao = st.selectbox('Selecione o tipo:', ['Salário','VR','Bônus','13º','VR','Cartola','Apostas','Investimentos'], key='class-receita')
 
@@ -214,7 +213,7 @@ with tab1:
 
         with st.form('form receita'):
             if st.form_submit_button('Adicionar Receitas'):
-                novo_receita = [receita_data, receita_mes, receita_descrição, receita_classificacao, receita_valor]
+                novo_receita = [receita_data, receita_mes_ref, receita_descrição, receita_classificacao, receita_valor]
                 novos_receitas.append(novo_receita)
 
         if novos_receitas:
