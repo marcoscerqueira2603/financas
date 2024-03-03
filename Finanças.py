@@ -259,13 +259,12 @@ with tab1:
 
         fixos_algumcredito =  st.selectbox('Gasto em algum crédito?:', ['-', 'Nubank','Crédito' ], key='class-algumcredito_fixos')
 
-
+        novos_fixos = []
         with st.form('form fixos'):
             if st.form_submit_button('Adicionar Débito'):
-                novo_debito = [fixos_data, fixos_mes_ref,  fixos_descrição, fixos_classificacao,fixos_algumcredito, fixos_valor]
-                novos_debitos.append(novo_debito)
-        novos_fixos = []
-
+                novos_fixo = [fixos_data, fixos_mes_ref,  fixos_descrição, fixos_classificacao,fixos_algumcredito, fixos_valor]
+                novos_fixos.append(novos_fixos)
+        
         if novos_fixos:
             novos_fixos_df = pd.DataFrame(novos_fixos, columns=fixos.columns)
             worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1AxG0j2qOZ9e1MRUCD20Jhd0roqPcZ8lcQPBhlIqwwGs/edit#gid=0').get_worksheet(0)
