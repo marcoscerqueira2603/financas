@@ -87,7 +87,7 @@ with tab1:
 
         with st.form('form débito'):
             if st.form_submit_button('Adicionar Débito'):
-                novo_debito = [debito_mes_ref, debito_data,  debito_descrição, debito_classificacao, debito_valor]
+                novo_debito = [debito_data, debito_mes_ref,  debito_descrição, debito_classificacao, debito_valor]
                 novos_debitos.append(novo_debito)
 
         if novos_debitos:
