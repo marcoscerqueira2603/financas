@@ -277,12 +277,4 @@ with tab1:
             worksheet.insert_rows(values_to_insert, num_rows + 1) 
 
 with tab2:
-    
-
-with tab3:
     #aaaa
-with tab4:
-with tab6:
-with tab6:
-
-    
