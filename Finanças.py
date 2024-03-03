@@ -263,7 +263,7 @@ with tab1:
         with st.form('form fixos'):
             if st.form_submit_button('Adicionar Fixos'):
                 novos_fixo = [fixos_data, fixos_mes_ref,  fixos_descrição, fixos_classificacao,fixos_algumcredito, fixos_valor]
-                novos_fixos.append(novos_fixos)
+                novos_fixos.append(novos_fixo)
         
         if novos_fixos:
             novos_fixos_df = pd.DataFrame(novos_fixos, columns=fixos.columns)
