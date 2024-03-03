@@ -260,7 +260,7 @@ with tab1:
         fixos_algumcredito =  st.selectbox('Gasto em algum crédito?:', ['-', 'Nubank','Crédito' ], key='class-algumcredito_fixos')
 
 
-        with st.form('form débito'):
+        with st.form('form fixos'):
             if st.form_submit_button('Adicionar Débito'):
                 novo_debito = [fixos_data, fixos_mes_ref,  fixos_descrição, fixos_classificacao,fixos_algumcredito, fixos_valor]
                 novos_debitos.append(novo_debito)
