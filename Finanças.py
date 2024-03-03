@@ -63,7 +63,7 @@ with tab1:
         #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
 
         #a partir do calculo de data conseguimos ter o mes e jogamos lá
-
+        debito_mes_ref = st.text_input('Insirir Mês Referência', key = "inserir-mesref-debito")
         debito_data = st.text_input('Insirir Data', key = "inserir-data-debito")
         debito_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-debito")
 
@@ -82,14 +82,12 @@ with tab1:
         else:
             debito_data = debito_data    
 
-        debito_date_obj = datetime.strptime(debito_data, "%d/%m/%Y")
-        debito_mes   = debito_date_obj.month
 
         novos_debitos = []
 
         with st.form('form débito'):
             if st.form_submit_button('Adicionar Débito'):
-                novo_debito = [debito_data, debito_mes, debito_descrição, debito_classificacao, debito_valor]
+                novo_debito = [debito_mes_ref, debito_data,  debito_descrição, debito_classificacao, debito_valor]
                 novos_debitos.append(novo_debito)
 
         if novos_debitos:
