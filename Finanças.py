@@ -61,7 +61,7 @@ def load_data5(sheets_url):
 
 fixos = load_data5(st.secrets["url_extrato_fixos"])
 
-tab1,tab2 = st.tabs(['Incluir Dados', 'Construir'])
+tab1,tab2, tab3, tab4, tab5,tab6 = st.tabs(['Incluir Dados', 'Status Mês Atual', 'Análises Débitos','Análises Créditos','Análises VR','Patrimônio'])
 
 with tab1:   
     with st.expander('Débito'):
@@ -74,7 +74,7 @@ with tab1:
         debito_data = st.text_input('Insirir Data', key = "inserir-data-debito")
         debito_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-debito")
 
-        debito_classificacao = st.selectbox('Selecione o tipo:', ['Necessidade', 'Lazer - Corinthians', 'Lazer - Outros', 'Lazer - Comida', 'Comida','Casa', 'Passagem','Cabelo','Outros','Classificação'], key='class-debito')
+        debito_classificacao = st.selectbox('Selecione o tipo:', ['Necessidade', 'Lazer - Corinthians', 'Lazer - Outros', 'Lazer - Comida', 'Comida','Outros'], key='class-debito')
         debito_valor = st.text_input('Insirir Valor', key = "inserir-valor-debito")
 
         if debito_valor == "":
@@ -275,3 +275,14 @@ with tab1:
             # Inserir os dados nas linhas subsequentes
             values_to_insert = novos_fixos_df.values.tolist()
             worksheet.insert_rows(values_to_insert, num_rows + 1) 
+
+with tab2:
+    
+
+with tab3:
+    #aaaa
+with tab4:
+with tab6:
+with tab6:
+
+    
