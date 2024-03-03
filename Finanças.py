@@ -63,7 +63,7 @@ with tab1:
         #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
 
         #a partir do calculo de data conseguimos ter o mes e jogamos lá
-        debito_mes_ref = st.text_input('Insirir Mês Referência', key = "inserir-mesref-debito")
+        debito_mes_ref = st.selectbox('Selecione o mês referência:', ['1 - janeiro', '2 - fevereiro', '3 - março', '4 - abril', '5 - maio','6 - junho', '7 - julho','8 - agosto','9 - setembro','10 - outubro','11 - novembro','12 - dezembro'], key='class-mesref')
         debito_data = st.text_input('Insirir Data', key = "inserir-data-debito")
         debito_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-debito")
 
