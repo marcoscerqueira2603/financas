@@ -54,6 +54,13 @@ def load_data4(sheets_url):
 
 receita = load_data4(st.secrets["url_extrato_receitas"])
 
+@st.cache_data(ttl=20)
+def load_data5(sheets_url):
+    csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
+    return pd.read_csv(csv_url)
+
+fixos = load_data5(st.secrets["url_extrato_fixos"])
+
 tab1,tab2 = st.tabs(['Incluir Dados', 'Construir'])
 
 with tab1:   
@@ -227,3 +234,45 @@ with tab1:
             values_to_insert = novos_receitas_df.values.tolist()
             worksheet.insert_rows(values_to_insert, num_rows + 1) 
             
+
+    with st.expander('Fixos'):
+        st.title('Fixos')
+
+        fixos_mes_ref = st.selectbox('Selecione o mês referência:', ['1 - janeiro', '2 - fevereiro', '3 - março', '4 - abril', '5 - maio','6 - junho', '7 - julho','8 - agosto','9 - setembro','10 - outubro','11 - novembro','12 - dezembro'], key='class-mesref_fixos')
+        fixos_data = st.text_input('Insirir Data', key = "inserir-data-fixos")
+        fixos_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-fixos")
+
+        fixos_classificacao = st.selectbox('Selecione o tipo:', ['Casa', 'Fiel Torcedor', 'Cabelo', 'Internet Celular', 'Spotify','Passagem', 'Seguro Celular','Streaming','Tembici - Itaú',], key='class-fixos')
+        fixos_valor = st.text_input('Insirir Valor', key = "inserir-valor-fixos")
+
+        if fixos_valor == "":
+            fixos_valor = 1.0
+        else:
+            fixos_valor = fixos_valor
+
+        fixos_valor = float(fixos_valor)
+
+        if fixos_data  == "":
+            fixos_data = "08/02/2000"
+        else:
+            fixos_data = fixos_data    
+
+        fixos_algumcredito =  st.selectbox('Gasto em algum crédito?:', ['-', 'Nubank','Crédito' ], key='class-algumcredito_fixos')
+
+
+        with st.form('form débito'):
+            if st.form_submit_button('Adicionar Débito'):
+                novo_debito = [fixos_data, fixos_mes_ref,  fixos_descrição, fixos_classificacao,fixos_algumcredito, fixos_valor]
+                novos_debitos.append(novo_debito)
+        novos_fixos = []
+
+        if novos_fixos:
+            novos_fixos_df = pd.DataFrame(novos_fixos, columns=fixos.columns)
+            worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1AxG0j2qOZ9e1MRUCD20Jhd0roqPcZ8lcQPBhlIqwwGs/edit#gid=0').get_worksheet(0)
+            
+            # Obter o número de linhas existentes na planilha
+            num_rows = len(worksheet.get_all_values())
+            
+            # Inserir os dados nas linhas subsequentes
+            values_to_insert = novos_fixos_df.values.tolist()
+            worksheet.insert_rows(values_to_insert, num_rows + 1) 
