@@ -261,7 +261,7 @@ with tab1:
 
         novos_fixos = []
         with st.form('form fixos'):
-            if st.form_submit_button('Adicionar Débito'):
+            if st.form_submit_button('Adicionar Fixos'):
                 novos_fixo = [fixos_data, fixos_mes_ref,  fixos_descrição, fixos_classificacao,fixos_algumcredito, fixos_valor]
                 novos_fixos.append(novos_fixos)
         
