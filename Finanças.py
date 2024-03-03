@@ -63,7 +63,7 @@ with tab1:
         #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
 
         #a partir do calculo de data conseguimos ter o mes e jogamos lá
-        debito_mes_ref = st.selectbox('Selecione o mês referência:', ['1 - janeiro', '2 - fevereiro', '3 - março', '4 - abril', '5 - maio','6 - junho', '7 - julho','8 - agosto','9 - setembro','10 - outubro','11 - novembro','12 - dezembro'], key='class-mesref')
+        debito_mes_ref = st.selectbox('Selecione o mês referência:', ['1 - janeiro', '2 - fevereiro', '3 - março', '4 - abril', '5 - maio','6 - junho', '7 - julho','8 - agosto','9 - setembro','10 - outubro','11 - novembro','12 - dezembro'], key='class-mesref_debito')
         debito_data = st.text_input('Insirir Data', key = "inserir-data-debito")
         debito_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-debito")
 
@@ -107,7 +107,7 @@ with tab1:
             #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
 
             #a partir do calculo de data conseguimos ter o mes e jogamos lá
-
+            vr_mes_ref = st.selectbox('Selecione o mês referência:', ['1 - janeiro', '2 - fevereiro', '3 - março', '4 - abril', '5 - maio','6 - junho', '7 - julho','8 - agosto','9 - setembro','10 - outubro','11 - novembro','12 - dezembro'], key='class-mesref_vr')
             vr_data = st.text_input('Insirir Data',key = 'insirir-data-vr')
             vr_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-vr')
             vr_local =  st.text_input('Insirir Local', key = 'insirir-local-vr')
@@ -126,14 +126,12 @@ with tab1:
             else:
                 vr_data = vr_data    
 
-            vr_date_obj = datetime.strptime(vr_data, "%d/%m/%Y")
-            vr_mes   = vr_date_obj.month
 
             novos_vrs = []
 
             with st.form('form vr'):
                 if st.form_submit_button('Adicionar Gastor VR'):
-                    novo_vr = [vr_data, vr_mes, vr_descrição,vr_local,  vr_classificacao, vr_valor]
+                    novo_vr = [ vr_data, vr_mes_ref, vr_descrição,vr_local,  vr_classificacao, vr_valor]
                     novos_vrs.append(novo_vr)
 
             if novos_vrs:
