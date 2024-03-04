@@ -279,3 +279,6 @@ with tab1:
 with tab3:
     st.title("Análises Débitos")
     debito
+
+    debito_mes  = debito.groupby(['Mês'])['Valor'].sum()
+    debito_mes
