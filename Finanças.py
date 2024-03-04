@@ -278,18 +278,27 @@ with tab1:
 
     with st.expander('Orçamento Mês'):
         st.title('Orçamento do mês')
-        
+
         orcamento_mes_ref = st.selectbox('Selecione o mês referência:', ['1 - janeiro', '2 - fevereiro', '3 - março', '4 - abril', '5 - maio','6 - junho', '7 - julho','8 - agosto','9 - setembro','10 - outubro','11 - novembro','12 - dezembro'], key='class-orcamento')
-        salario_base = st.text_input('Insirir Salário', key = "inserir-salário-orçamento")
+        orcamento_salario_base = st.text_input('Insirir Salário', key = "inserir-salário-orçamento")
+        orcamento_casa = st.text_input('Insirir Orçamento Casa', key = "inserir-casa-orçamento")
+        orcamento_fieltorcedor = st.text_input('Insirir orçamento Fiel Torcedor', key = "inserir-ft-orçamento")
+        orcamento_cabelo = st.text_input('Insirir Orçamento Cabelo', key = "inserir-cabelo-orçamento")
+        orcamento_celular = st.text_input('Insirir Orçamento Internet Celular', key = "inserir-celular-orçamento")
+        orcamento_spotify = st.text_input('Insirir Orçamento Spotify', key = "inserir-spotify-orçamento")
+        orcamento_passagem = st.text_input('Insirir Orçamento Passagem', key = "inserir-passagem-orçamento")
+        orcamento_segurocel = st.text_input('Insirir Orçamento Seguro Celular', key = "inserir-segurocel-orçamento")
+        orcamento_casa = st.text_input('Insirir Orçamento Casa', key = "inserir-casa-orçamento")
+        orcamento_tembici = st.text_input('Insirir Orçamento Bike Itau', key = "inserir-bikeitau-orçamento")
+        orcamento_crednubank = st.text_input('Insirir Orçamento Crédito Nubank', key = "inserir-crednubank-orçamento")
+        orcamento_credinter = st.text_input('Insirir Orçamento Crédito Inter', key = "inserir-credinter-orçamento")
+        orcamento_debito = st.text_input('Insirir Orçamento débito', key = "inserir-debito-orçamento")
+        orcamento_juntar = st.text_input('Insirir Orçamento juntar', key = "inserir-juntar-orçamento")
 
-
-
-        if fixos_valor == "":
-            fixos_valor = 1.0
-        else:
-            fixos_valor = fixos_valor
-
-        fixos_valor = float(fixos_valor)
+        soma_gastos = orcamento_casa + orcamento_fieltorcedor + orcamento_cabelo +  orcamento_celular +  orcamento_spotify + orcamento_passagem + orcamento_segurocel+ orcamento_casa+ orcamento_tembici +orcamento_crednubank + orcamento_credinter + orcamento_debito +orcamento_juntar
+        sobra = orcamento_salario_base - soma_gastos
+        sobra
+     
 
        
 with tab3:
