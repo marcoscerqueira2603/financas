@@ -276,6 +276,22 @@ with tab1:
             values_to_insert = novos_fixos_df.values.tolist()
             worksheet.insert_rows(values_to_insert, num_rows + 1) 
 
+    with st.expander('Orçamento Mês'):
+        st.title('Orçamento do mês')
+        
+        orcamento_mes_ref = st.selectbox('Selecione o mês referência:', ['1 - janeiro', '2 - fevereiro', '3 - março', '4 - abril', '5 - maio','6 - junho', '7 - julho','8 - agosto','9 - setembro','10 - outubro','11 - novembro','12 - dezembro'], key='class-orcamento')
+        salario_base = st.text_input('Insirir Salário', key = "inserir-salário-orçamento")
+
+
+
+        if fixos_valor == "":
+            fixos_valor = 1.0
+        else:
+            fixos_valor = fixos_valor
+
+        fixos_valor = float(fixos_valor)
+
+       
 with tab3:
     st.title("Análises Débitos")
     debito
