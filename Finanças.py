@@ -288,7 +288,7 @@ with tab1:
         orcamento_spotify = st.text_input('Insirir Orçamento Spotify', key = "inserir-spotify-orçamento")
         orcamento_passagem = st.text_input('Insirir Orçamento Passagem', key = "inserir-passagem-orçamento")
         orcamento_segurocel = st.text_input('Insirir Orçamento Seguro Celular', key = "inserir-segurocel-orçamento")
-        orcamento_casa = st.text_input('Insirir Orçamento Casa', key = "inserir-casa-orçamento")
+        orcamento_streaming   = st.text_input('Insirir Orçamento Casa', key = "inserir-streaming-orçamento")
         orcamento_tembici = st.text_input('Insirir Orçamento Bike Itau', key = "inserir-bikeitau-orçamento")
         orcamento_crednubank = st.text_input('Insirir Orçamento Crédito Nubank', key = "inserir-crednubank-orçamento")
         orcamento_credinter = st.text_input('Insirir Orçamento Crédito Inter', key = "inserir-credinter-orçamento")
