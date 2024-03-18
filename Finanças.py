@@ -305,6 +305,7 @@ with tab1:
                 string = 1.0
             else:
                 string = string      
+                
         sobra = float(orcamento_salario_base) - soma_gastos
         sobra
 with tab3:
