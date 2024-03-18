@@ -298,19 +298,39 @@ with tab1:
         
         
         
+        if orcamento_salario_base == "":
+            orcamento_salario_base = 1.0
+        if orcamento_casa == "":
+            orcamento_casa = 1.0
+        if orcamento_fieltorcedor == "":
+            orcamento_fieltorcedor = 1.0
+        if orcamento_cabelo == "":
+            orcamento_cabelo = 1.0
+        if orcamento_celular == "":
+            orcamento_celular = 1.0
+        if orcamento_spotify == "":
+            orcamento_spotify = 1.0
+        if orcamento_passagem == "":
+            orcamento_passagem = 1.0
+        if orcamento_segurocel == "":
+            orcamento_segurocel = 1.0
+        if orcamento_streaming == "":
+            orcamento_streaming = 1.0
+        if orcamento_tembici == "":
+            orcamento_tembici = 1.0
+        if orcamento_crednubank == "":
+            orcamento_crednubank = 1.0
+        if orcamento_credinter == "":
+            orcamento_credinter = 1.0
+        if orcamento_debito == "":
+            orcamento_debito = 1.0
+        if orcamento_juntar == "":
+            orcamento_juntar = 1.0
 
-        strings_orcamentos = [orcamento_salario_base, orcamento_casa, orcamento_fieltorcedor, orcamento_cabelo, orcamento_celular, orcamento_spotify, orcamento_passagem, orcamento_segurocel, orcamento_streaming, orcamento_tembici,orcamento_crednubank, orcamento_credinter, orcamento_debito, orcamento_juntar ]
+        soma_gastos = float(orcamento_casa) + float(orcamento_fieltorcedor)  + float(orcamento_cabelo) +  float(orcamento_celular) +  float(orcamento_spotify) + float(orcamento_passagem) + float(orcamento_segurocel)+ float(orcamento_casa)+ float(orcamento_tembici) + float(orcamento_crednubank) + float(orcamento_credinter) + float(orcamento_debito) +float(orcamento_juntar)
+        sobra = float(orcamento_salario_base) - soma_gastos
+        sobra
         
-        for string in strings_orcamentos:
-            if string  == "":
-                string = 1.0
-            else:
-                string = string      
-        
-        #soma_gastos = float(orcamento_casa) + float(orcamento_fieltorcedor)  + float(orcamento_cabelo) +  float(orcamento_celular) +  float(orcamento_spotify) + float(orcamento_passagem) + float(orcamento_segurocel)+ float(orcamento_casa)+ float(orcamento_tembici) + float(orcamento_crednubank) + float(orcamento_credinter) + float(orcamento_debito) +float(orcamento_juntar)
-        #sobra = float(orcamento_salario_base) - soma_gastos
-        #sobra
-        strings_orcamentos
 with tab3:
     st.title("Análises Débitos")
     debito
