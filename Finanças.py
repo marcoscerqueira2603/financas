@@ -302,7 +302,7 @@ with tab1:
         strings_orcamentos = [orcamento_salario_base, orcamento_casa, orcamento_fieltorcedor, orcamento_cabelo, orcamento_celular, orcamento_spotify, orcamento_passagem, orcamento_segurocel, orcamento_streaming, orcamento_tembici,orcamento_crednubank, orcamento_credinter, orcamento_debito, orcamento_juntar ]
         for string in strings_orcamentos:
             if string  == "":
-                string = 0.0
+                string = 1.0
             else:
                 string = string      
 
