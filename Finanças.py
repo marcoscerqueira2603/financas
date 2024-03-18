@@ -301,16 +301,16 @@ with tab1:
 
         strings_orcamentos = [orcamento_salario_base, orcamento_casa, orcamento_fieltorcedor, orcamento_cabelo, orcamento_celular, orcamento_spotify, orcamento_passagem, orcamento_segurocel, orcamento_streaming, orcamento_tembici,orcamento_crednubank, orcamento_credinter, orcamento_debito, orcamento_juntar ]
         
-
-        if orcamento_salario_base  == "":
-            orcamento_salario_base = 1.0
-        else:
-            orcamento_salario_base = orcamento_salario_base      
+        for string in strings_orcamentos:
+            if string  == "":
+                string = 1.0
+            else:
+                string = string      
         
         #soma_gastos = float(orcamento_casa) + float(orcamento_fieltorcedor)  + float(orcamento_cabelo) +  float(orcamento_celular) +  float(orcamento_spotify) + float(orcamento_passagem) + float(orcamento_segurocel)+ float(orcamento_casa)+ float(orcamento_tembici) + float(orcamento_crednubank) + float(orcamento_credinter) + float(orcamento_debito) +float(orcamento_juntar)
         #sobra = float(orcamento_salario_base) - soma_gastos
         #sobra
-        orcamento_salario_base
+        strings_orcamentos
 with tab3:
     st.title("Análises Débitos")
     debito
