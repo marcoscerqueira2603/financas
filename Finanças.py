@@ -329,7 +329,8 @@ with tab1:
 
         soma_gastos = float(orcamento_casa) + float(orcamento_fieltorcedor)  + float(orcamento_cabelo) +  float(orcamento_celular) +  float(orcamento_spotify) + float(orcamento_passagem) + float(orcamento_segurocel)+ float(orcamento_casa)+ float(orcamento_tembici) + float(orcamento_crednubank) + float(orcamento_credinter) + float(orcamento_debito) +float(orcamento_juntar)
         sobra = float(orcamento_salario_base) - soma_gastos
-        sobra
+
+        st.metric(label='Sobra Final', value=sobra)
         
 with tab3:
     st.title("Análises Débitos")
