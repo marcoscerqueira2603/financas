@@ -61,6 +61,14 @@ def load_data5(sheets_url):
 
 fixos = load_data5(st.secrets["url_extrato_fixos"])
 
+@st.cache_data(ttl=20)
+def load_data6(sheets_url):
+    csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
+    return pd.read_csv(csv_url)
+
+orcamento_mensal = load_data6(st.secrets["url_orcamento_mensal"])
+
+
 tab1,tab2,tab3, tab4, tab5,tab6, tab7 = st.tabs(['Incluir Dados', 'Status Mês Atual', 'Análises Débitos','Análises Créditos','Análises VR','Análises Fixos','Patrimônio'])
 
 with tab1:   
@@ -331,6 +339,10 @@ with tab1:
         sobra = float(orcamento_salario_base) - soma_gastos
 
         st.metric(label='Sobra Final', value=sobra)
+
+
+
+
         
 with tab3:
     st.title("Análises Débitos")
