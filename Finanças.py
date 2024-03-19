@@ -290,7 +290,6 @@ with tab1:
        
         orcamentos_mes_ref = st.selectbox('Selecione o mês referência:', ['1 - janeiro', '2 - fevereiro', '3 - março', '4 - abril', '5 - maio','6 - junho', '7 - julho','8 - agosto','9 - setembro','10 - outubro','11 - novembro','12 - dezembro'], key='class-orcamento')
 
-
         orcamentos_valor = st.text_input('Insirir Valor', key = "inserir-valor-orcamentos")
 
         if orcamentos_valor== "":
@@ -315,7 +314,7 @@ with tab1:
 
         if novos_orcamentos_mensais:
             novos_orcamentos_mensais_df = pd.DataFrame(novos_orcamentos_mensais, columns=orcamento_mensal.columns)
-            worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1D1lU2R55OpfwdA8INDPdan3VGM-3oZ56BRYiSr2uCvE/edit#gid=0').get_worksheet(0)
+            worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1D1lU2R55OpfwdA8INDPdan3VGM-3oZ56BRYiSr2uCvE/edit?usp=sharing').get_worksheet(0)
             
             # Obter o número de linhas existentes na planilha
             num_rows = len(worksheet.get_all_values())
