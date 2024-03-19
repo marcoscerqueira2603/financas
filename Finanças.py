@@ -314,7 +314,7 @@ with tab1:
 
         if novos_orcamentos_mensais:
             novos_orcamentos_mensais_df = pd.DataFrame(novos_orcamentos_mensais, columns=orcamento_mensal.columns)
-            worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1D1lU2R55OpfwdA8INDPdan3VGM-3oZ56BRYiSr2uCvE/edit?usp=sharing').get_worksheet(0)
+            worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1D1lU2R55OpfwdA8INDPdan3VGM-3oZ56BRYiSr2uCvE/edit#gid=0').get_worksheet(0)
             
             # Obter o número de linhas existentes na planilha
             num_rows = len(worksheet.get_all_values())
