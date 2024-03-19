@@ -286,59 +286,43 @@ with tab1:
 
     with st.expander('Orçamento Mês'):
         st.title('Orçamento do mês')
+        orcamentos_classificacao = st.selectbox('Selecione o tipo:', ['Salário', 'Casa', 'Fiel Torcedor', 'Cabelo', 'Internet Celular', 'Spotify','Passagem', 'Seguro Celular','Streaming','Tembici - Itaú','Crédito - Nubank', 'Crédito - Inter','Débito', 'Juntar'], key='class-orcamentos')
+       
+        orcamentos_mes_ref = st.selectbox('Selecione o mês referência:', ['1 - janeiro', '2 - fevereiro', '3 - março', '4 - abril', '5 - maio','6 - junho', '7 - julho','8 - agosto','9 - setembro','10 - outubro','11 - novembro','12 - dezembro'], key='class-orcamento')
 
-        orcamento_mes_ref = st.selectbox('Selecione o mês referência:', ['1 - janeiro', '2 - fevereiro', '3 - março', '4 - abril', '5 - maio','6 - junho', '7 - julho','8 - agosto','9 - setembro','10 - outubro','11 - novembro','12 - dezembro'], key='class-orcamento')
-        orcamento_salario_base = st.text_input('Insirir Salário', key = "inserir-salário-orçamento")
-        orcamento_casa = st.text_input('Insirir Orçamento Casa', key = "inserir-casa-orçamento")
-        orcamento_fieltorcedor = st.text_input('Insirir orçamento Fiel Torcedor', key = "inserir-ft-orçamento")
-        orcamento_cabelo = st.text_input('Insirir Orçamento Cabelo', key = "inserir-cabelo-orçamento")
-        orcamento_celular = st.text_input('Insirir Orçamento Internet Celular', key = "inserir-celular-orçamento")
-        orcamento_spotify = st.text_input('Insirir Orçamento Spotify', key = "inserir-spotify-orçamento")
-        orcamento_passagem = st.text_input('Insirir Orçamento Passagem', key = "inserir-passagem-orçamento")
-        orcamento_segurocel = st.text_input('Insirir Orçamento Seguro Celular', key = "inserir-segurocel-orçamento")
-        orcamento_streaming   = st.text_input('Insirir Orçamento Casa', key = "inserir-streaming-orçamento")
-        orcamento_tembici = st.text_input('Insirir Orçamento Bike Itau', key = "inserir-bikeitau-orçamento")
-        orcamento_crednubank = st.text_input('Insirir Orçamento Crédito Nubank', key = "inserir-crednubank-orçamento")
-        orcamento_credinter = st.text_input('Insirir Orçamento Crédito Inter', key = "inserir-credinter-orçamento")
-        orcamento_debito = st.text_input('Insirir Orçamento débito', key = "inserir-debito-orçamento")
-        orcamento_juntar = st.text_input('Insirir Orçamento juntar', key = "inserir-juntar-orçamento")
 
-        if orcamento_salario_base == "":
-            orcamento_salario_base = 1.0
-        if orcamento_casa == "":
-            orcamento_casa = 1.0
-        if orcamento_fieltorcedor == "":
-            orcamento_fieltorcedor = 1.0
-        if orcamento_cabelo == "":
-            orcamento_cabelo = 1.0
-        if orcamento_celular == "":
-            orcamento_celular = 1.0
-        if orcamento_spotify == "":
-            orcamento_spotify = 1.0
-        if orcamento_passagem == "":
-            orcamento_passagem = 1.0
-        if orcamento_segurocel == "":
-            orcamento_segurocel = 1.0
-        if orcamento_streaming == "":
-            orcamento_streaming = 1.0
-        if orcamento_tembici == "":
-            orcamento_tembici = 1.0
-        if orcamento_crednubank == "":
-            orcamento_crednubank = 1.0
-        if orcamento_credinter == "":
-            orcamento_credinter = 1.0
-        if orcamento_debito == "":
-            orcamento_debito = 1.0
-        if orcamento_juntar == "":
-            orcamento_juntar = 1.0
+        orcamentos_valor = st.text_input('Insirir Valor', key = "inserir-valor-orcamentos")
 
-        soma_gastos = float(orcamento_casa) + float(orcamento_fieltorcedor)  + float(orcamento_cabelo) +  float(orcamento_celular) +  float(orcamento_spotify) + float(orcamento_passagem) + float(orcamento_segurocel)+ float(orcamento_casa)+ float(orcamento_tembici) + float(orcamento_crednubank) + float(orcamento_credinter) + float(orcamento_debito) +float(orcamento_juntar)
-        sobra = float(orcamento_salario_base) - soma_gastos
+        if orcamentos_valor== "":
+            orcamentos_valor = 1.0
+        else:
+            orcamentos_valor = orcamentos_valor
+
+        orcamentos_valor = float(orcamentos_valor)
+
+       
+        #soma_gastos = float(orcamento_casa) + float(orcamento_fieltorcedor)  + float(orcamento_cabelo) +  float(orcamento_celular) +  float(orcamento_spotify) + float(orcamento_passagem) + float(orcamento_segurocel)+ float(orcamento_casa)+ float(orcamento_tembici) + float(orcamento_crednubank) + float(orcamento_credinter) + float(orcamento_debito) +float(orcamento_juntar)
+        #sobra = float(orcamento_salario_base) - soma_gastos
 
         st.metric(label='Sobra Final', value=sobra)
 
-        orcamento_mensal
+        novos_orcamentos_mensais = []
 
+        with st.form('form orcamento mensais'):
+            if st.form_submit_button('Adicionar Orçamento'):
+                novo_orcamentos_mensais = [orcamentos_mes_ref, orcamentos_classificacao,orcamentos_valor ]
+                novos_orcamentos_mensais.append(novo_orcamentos_mensais)
+
+        if novos_orcamentos_mensais:
+            novos_orcamentos_mensais_df = pd.DataFrame(novos_orcamentos_mensais, columns=orcamento_mensal.columns)
+            worksheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1D1lU2R55OpfwdA8INDPdan3VGM-3oZ56BRYiSr2uCvE/edit#gid=0').get_worksheet(0)
+            
+            # Obter o número de linhas existentes na planilha
+            num_rows = len(worksheet.get_all_values())
+            
+            # Inserir os dados nas linhas subsequentes
+            values_to_insert = novos_fixos_df.values.tolist()
+            worksheet.insert_rows(values_to_insert, num_rows + 1)                 
 
         
 with tab3:
