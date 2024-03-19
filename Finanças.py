@@ -303,9 +303,6 @@ with tab1:
         orcamento_debito = st.text_input('Insirir Orçamento débito', key = "inserir-debito-orçamento")
         orcamento_juntar = st.text_input('Insirir Orçamento juntar', key = "inserir-juntar-orçamento")
 
-        
-        
-        
         if orcamento_salario_base == "":
             orcamento_salario_base = 1.0
         if orcamento_casa == "":
@@ -340,7 +337,7 @@ with tab1:
 
         st.metric(label='Sobra Final', value=sobra)
 
-
+        orcamento_mensal
 
 
         
