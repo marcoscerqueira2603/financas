@@ -321,7 +321,7 @@ with tab1:
             num_rows = len(worksheet.get_all_values())
             
             # Inserir os dados nas linhas subsequentes
-            values_to_insert = novos_fixos_df.values.tolist()
+            values_to_insert = novos_orcamentos_mensais_df.values.tolist()
             worksheet.insert_rows(values_to_insert, num_rows + 1)                 
 
         
