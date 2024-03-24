@@ -329,7 +329,7 @@ with tab1:
         orcamento_mensal_sem_salario = orcamento_mensal_sem_salario.drop('Tipo Orçamento', axis=1)
         orcamento_mensal_salario = orcamento_mensal_salario.drop('Tipo Orçamento', axis=1)
         orcamento_mensal_salario
-        orcamento_mensal_sem_salario = orcamento_mensal_sem_salario.reanme(columns={'Valor':'Valor_2'} )
+        orcamento_mensal_sem_salario = orcamento_mensal_sem_salario.rename(columns={'Valor':'Valor_2'} )
         orcamento_mensal_sem_salario.groupby('Mês')['Valor_2'].sum()
         orcamento_mensal_sem_salario
         
