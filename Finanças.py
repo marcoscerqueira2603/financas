@@ -344,8 +344,7 @@ with tab1:
 
 with tab3:
     st.title("Análises Débitos")
-    debito
-
+    
     debito['Valor'] = debito['Valor'].str.replace(',', '.')
     debito['Valor'] = debito['Valor'].astype(float)
     debito_mes  = debito.groupby(['Mês Referência'])['Valor'].sum()
