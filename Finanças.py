@@ -376,7 +376,8 @@ with tab3:
         plot_bgcolor='rgba(0,0,0,0)'
     )
 
-    debito
+    debito_classificacao_media = debito.groupby(['Classificação'])['Valor'].mean()
+    debito_classificacao_media
 
     col1, col2 = st.columns(2)
     with col1:
