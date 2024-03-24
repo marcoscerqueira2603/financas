@@ -376,12 +376,12 @@ with tab3:
         plot_bgcolor='rgba(0,0,0,0)'
     )
 
-    debito
+    
     debito_classificacao_soma = debito.groupby(['Classificação'])['Valor'].sum().reset_index()
     debito_classificacao_soma_total = debito['Valor'].sum()
     debito_classificacao_soma['Percentual'] = debito_classificacao_soma['Valor'] / debito_classificacao_soma_total  
     debito_classificacao_soma['Percentual'] = round(debito_classificacao_soma['Percentual']*100,2)
-    debito_classificacao_soma
+    
 
     grafico_debito_class_med =  go.Figure()
 
