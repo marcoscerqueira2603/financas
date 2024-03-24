@@ -328,7 +328,8 @@ with tab1:
         orcamento_mensal_sem_salario = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] != 'Patrimonio que sobrou de 2023']
         orcamento_mensal_sem_salario = orcamento_mensal_sem_salario.drop('Tipo Orçamento', axis=1)
         orcamento_mensal_salario = orcamento_mensal_salario.drop('Tipo Orçamento', axis=1)
-        
+        orcamento_mensal_salario
+        orcamento_mensal_sem_salario
 
         
 with tab3:
