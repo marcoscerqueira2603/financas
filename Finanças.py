@@ -359,7 +359,7 @@ with tab3:
     grafico_debito.add_trace(go.Bar(x=debito_mes_consolidado['Mês Referência'], y=debito_mes_consolidado['Valor'], name='Real'))
     grafico_debito.update_layout(
         title= 'Orçado vs Real',
-        xaxis = dict(title='Mês Referência', showgride=False)
+        xaxis = dict(title='Mês Referência', showgride=False),
         yaxis = dict(title='Valores', showgrid=False),
         plot_bgcolor='rgba(0,0,0,0)'
     )
