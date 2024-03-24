@@ -329,7 +329,7 @@ with tab1:
         orcamento_mensal_sem_salario = orcamento_mensal_sem_salario.drop('Tipo Orçamento', axis=1)
         orcamento_mensal_salario = orcamento_mensal_salario.drop('Tipo Orçamento', axis=1)
         orcamento_mensal_salario = orcamento_mensal_salario.reset_index(drop=True)
-
+        orcamento_mensal_salario.set_index('Mês', inplace=True)
         orcamento_mensal_sem_salario = orcamento_mensal_sem_salario.rename(columns={'Valor':'Valor_2'} )
         orcamento_mensal_sem_salario['Valor_2'] = orcamento_mensal_sem_salario['Valor_2'].str.replace('.','').str.replace(',','.')
         orcamento_mensal_sem_salario['Valor_2'] = orcamento_mensal_sem_salario['Valor_2'].astype(float)
