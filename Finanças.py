@@ -386,7 +386,7 @@ with tab3:
     grafico_debito_class_med =  go.Figure()
 
     grafico_debito_class_med.add_trace(go.Bar(x=debito_classificacao_soma['Classificação'],y=debito_classificacao_soma['Percentual'], 
-                                              marker_color='#FFA500',
+                                              marker_color='#0000FF',
                                               text=debito_classificacao_soma['Percentual'],
                                               textposition='auto'))
     
