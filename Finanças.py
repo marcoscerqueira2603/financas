@@ -404,7 +404,7 @@ with tab3:
     with col2:
         grafico_debito_class_med
  
-    debito_mes_consolidado_ultima_linha = debito_mes_consolidado.iloc[-1]
+    ultima_linha = debito_mes_consolidado.tail(1)
     #saldo_atual_debito_mes = debito_mes_consolidado_ultima_linha['Valor Orçamento'] - debito_mes_consolidado_ultima_linha['Valor']           
     #saldo_atual_debito_mes     
-    debito_mes_consolidado_ultima_linha
+    ultima_linha
