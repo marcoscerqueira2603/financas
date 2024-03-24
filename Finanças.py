@@ -362,3 +362,4 @@ with tab3:
         xaxis = dict(title='Mês Referência'),
         plot_bgcolor='rgba(0,0,0,0)'
     )
+    grafico_debito
