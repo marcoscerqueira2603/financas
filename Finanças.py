@@ -330,6 +330,8 @@ with tab1:
         orcamento_mensal_salario = orcamento_mensal_salario.drop('Tipo Orçamento', axis=1)
         orcamento_mensal_salario = orcamento_mensal_salario.reset_index(drop=True)
         orcamento_mensal_salario.set_index('Mês', inplace=True)
+        orcamento_mensal_salario['Valor'] = orcamento_mensal_salario['Valor'].str.replace('.','').str.replace(',','.')
+        orcamento_mensal_salario['Valor'] = orcamento_mensal_salario['Valor'].astype(float)
 
         orcamento_mensal_sem_salario = orcamento_mensal_sem_salario.rename(columns={'Valor':'Valor_2'} )
         orcamento_mensal_sem_salario['Valor_2'] = orcamento_mensal_sem_salario['Valor_2'].str.replace('.','').str.replace(',','.')
@@ -339,6 +341,9 @@ with tab1:
         orcamento_mensal_consolidado = pd.merge(orcamento_mensal_salario, orcamento_mensal_sem_salario, on='Mês', how='outer')
         orcamento_mensal_consolidado['Sobra'] =  orcamento_mensal_consolidado['Valor'] -  orcamento_mensal_consolidado['Valor_2']
         orcamento_mensal_consolidado
+
+
+
 with tab3:
     st.title("Análises Débitos")
     debito
