@@ -403,3 +403,5 @@ with tab3:
         grafico_debito
     with col2:
         grafico_debito_class_med
+
+    orcamento_mensal_consolidado        
