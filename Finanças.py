@@ -376,7 +376,7 @@ with tab3:
         plot_bgcolor='rgba(0,0,0,0)'
     )
 
-    debito_mes
+    debito
 
     col1, col2 = st.columns(2)
     with col1:
