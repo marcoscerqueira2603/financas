@@ -344,7 +344,7 @@ with tab1:
 
 with tab3:
     st.title("Análises Débitos")
-    
+
     debito['Valor'] = debito['Valor'].str.replace(',', '.')
     debito['Valor'] = debito['Valor'].astype(float)
     debito_mes  = debito.groupby(['Mês Referência'])['Valor'].sum()
@@ -365,7 +365,7 @@ with tab3:
                                     textposition='auto'))
     grafico_debito.add_trace(go.Bar(x=debito_mes_consolidado['Mês Referência'], y=debito_mes_consolidado['Valor'],
                                      name='Real',
-                                     marker_color='#00FF7F',
+                                     marker_color='#DC143C',
                                      text=debito_mes_consolidado['Valor'],
                                      textposition='auto'))
     
