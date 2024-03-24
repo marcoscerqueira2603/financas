@@ -352,6 +352,7 @@ with tab3:
     orcamento_mensal_debito = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == "Débito"]
     orcamento_mensal_debito =  orcamento_mensal_debito.rename(columns={'Mês': 'Mês Referência', 'Valor':'Valor_Orcamento'})
     orcamento_mensal_debito
+    debito_mes
     debito_mes_consolidado =  pd.merge(debito_mes,orcamento_mensal_debito, on='Mês Referência',how='outer' )
     debito_mes_consolidado['Valor_Orcamento'] = debito_mes_consolidado['Valor_Orcamento'].str.replace(',','.')
     grafico_debito =  go.Figure()
