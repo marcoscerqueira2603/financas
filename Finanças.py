@@ -324,7 +324,10 @@ with tab1:
             worksheet.insert_rows(values_to_insert, num_rows + 1)                 
 
         orcamento_mensal_salario = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == 'Salário'] 
+        orcamento_mensal_sem_salario = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] != 'Salário']
+        orcamento_mensal_sem_salario
         orcamento_mensal_salario
+
 
         
 with tab3:
