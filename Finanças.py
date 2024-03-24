@@ -357,3 +357,4 @@ with tab3:
     grafico_debito =  go.Figure()
     grafico_debito.add_trace(go.Bar(x=debito_mes_consolidado['Mês Referência'], y=debito_mes_consolidado['Valor'] ))
     grafico_debito.add_trace(go.Bar(x=debito_mes_consolidado['Mês Referência'], y=debito_mes_consolidado['Valor_Orcamento'] ))
+    grafico_debito
