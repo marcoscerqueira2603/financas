@@ -351,8 +351,6 @@ with tab3:
     debito_mes  = debito.groupby(['Mês Referência'])['Valor'].sum()
     orcamento_mensal_debito = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == "Débito"]
     orcamento_mensal_debito =  orcamento_mensal_debito.rename(columns={'Mês': 'Mês Referência', 'Valor':'Valor_Orcamento'})
-    orcamento_mensal_debito
-    debito_mes
 
     debito_mes_consolidado =  pd.merge(debito_mes,orcamento_mensal_debito, on='Mês Referência',how='outer' )
     debito_mes_consolidado['Valor_Orcamento'] = debito_mes_consolidado['Valor_Orcamento'].str.replace(',','.')
@@ -378,4 +376,7 @@ with tab3:
         yaxis = dict(title='Valores', showgrid=False),
         plot_bgcolor='rgba(0,0,0,0)'
     )
-    grafico_debito
+
+    col1, col2 = st.columns(2)
+    with col1:
+        grafico_debito
