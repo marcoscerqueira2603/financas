@@ -339,7 +339,7 @@ with tab1:
         
         orcamento_mensal_consolidado = pd.merge(orcamento_mensal_salario, orcamento_mensal_sem_salario, on='Mês', how='outer')
         #orcamento_mensal_consolidado = pd.concat([orcamento_mensal_salario, orcamento_mensal_sem_salario])
-        orcamento_mensal_consolidado
+        orcamento_mensal_consolidado['Sobra'] =  orcamento_mensal_consolidado['Valor'] -  orcamento_mensal_consolidado['Valor_2']
 with tab3:
     st.title("Análises Débitos")
     debito
