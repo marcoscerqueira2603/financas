@@ -398,11 +398,11 @@ with tab3:
 
      
     ultima_linha_debito_mes = debito_mes_consolidado.tail(1)
-    saldo_atual_debito_mes = ultima_linha_debito_mes['Valor_Orcamento'] - ultima_linha_debito_mes['Valor']           
-
+    #saldo_atual_debito_mes = ultima_linha_debito_mes['Valor_Orcamento'] - ultima_linha_debito_mes['Valor']           
+    ultima_linha_debito_mes
     col1, col2 = st.columns(2)
     with col1:
-        st.metric(label='Saldo Mês Atual', value=saldo_atual_debito_mes)
+        #st.metric(label='Saldo Mês Atual', value=saldo_atual_debito_mes)
         grafico_debito
         with col2:
             grafico_debito_class_med
