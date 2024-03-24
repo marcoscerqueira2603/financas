@@ -385,9 +385,21 @@ with tab3:
 
     grafico_debito_class_med =  go.Figure()
 
-    grafico_debito_class_med.add_trace(go.Bar(x=debito_classificacao_soma['Classificação'],y=debito_classificacao_soma['Percentual'], marker_color='#FFA500'))
-    grafico_debito_class_med
+    grafico_debito_class_med.add_trace(go.Bar(x=debito_classificacao_soma['Classificação'],y=debito_classificacao_soma['Percentual'], 
+                                              marker_color='#FFA500',
+                                              text=debito_classificacao_soma['Percentual'],
+                                              textposition='auto'))
+    
+    grafico_debito_class_med.update_layout(
+        title= 'Percentual de gastos por itens total no ano',
+        xaxis = dict(title='Itens', showgrid=False),
+        yaxis = dict(title='Valores', showgrid=False),
+    )
+
+    
 
     col1, col2 = st.columns(2)
     with col1:
         grafico_debito
+    with col2:
+        grafico_debito_class_med
