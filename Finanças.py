@@ -352,3 +352,4 @@ with tab3:
     orcamento_mensal_debito = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == "Débito"]
     orcamento_mensal_debito =  orcamento_mensal_debito.rename(columns={'Mês': 'Mês Referência'})
     debito_mes
+    orcamento_mensal_debito
