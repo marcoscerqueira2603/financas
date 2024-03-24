@@ -383,6 +383,11 @@ with tab3:
     debito_classificacao_soma['Percentual'] = round(debito_classificacao_soma['Percentual']*100,2)
     debito_classificacao_soma
 
+    grafico_debito_class_med =  go.Figure()
+
+    grafico_debito_class_med.add_trace(go.Bar(x=debito_classificacao_soma['Classificação'],y=debito_classificacao_soma['Percentual'], marker_color='#FFA500'))
+    grafico_debito_class_med
+
     col1, col2 = st.columns(2)
     with col1:
         grafico_debito
