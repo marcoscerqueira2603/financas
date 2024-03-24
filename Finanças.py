@@ -355,8 +355,18 @@ with tab3:
     debito_mes_consolidado =  pd.merge(debito_mes,orcamento_mensal_debito, on='Mês Referência',how='outer' )
     debito_mes_consolidado['Valor_Orcamento'] = debito_mes_consolidado['Valor_Orcamento'].str.replace(',','.')
     grafico_debito =  go.Figure()
-    grafico_debito.add_trace(go.Bar(x=debito_mes_consolidado['Mês Referência'], y=debito_mes_consolidado['Valor_Orcamento'], name='Orçado' , marker_color='#708090'))
-    grafico_debito.add_trace(go.Bar(x=debito_mes_consolidado['Mês Referência'], y=debito_mes_consolidado['Valor'], name='Real',marker_color='#00FF7F'))
+    
+    grafico_debito.add_trace(go.Bar(x=debito_mes_consolidado['Mês Referência'], y=debito_mes_consolidado['Valor_Orcamento'], 
+                                    name='Orçado' ,
+                                    marker_color='#708090',
+                                    text=debito_mes_consolidado['Valor_Orcamento'],
+                                    textposition='auto'))
+    grafico_debito.add_trace(go.Bar(x=debito_mes_consolidado['Mês Referência'], y=debito_mes_consolidado['Valor'],
+                                     name='Real',
+                                     marker_color='#00FF7F'
+                                     text=debito_mes_consolidado['Valor'],
+                                     textposition='auto'))
+    
     grafico_debito.update_layout(
         title= 'Orçado vs Real',
         xaxis = dict(title='Mês Referência', showgrid=False),
