@@ -331,8 +331,8 @@ with tab1:
         orcamento_mensal_salario
 
         orcamento_mensal_sem_salario = orcamento_mensal_sem_salario.rename(columns={'Valor':'Valor_2'} )
-        orcamento_mensal_sem_salario = orcamento_mensal_sem_salario['Valor_2'].str.replace('.','').str.replace(',','.')
-        orcamento_mensal_sem_salario = orcamento_mensal_sem_salario['Valor_2'].astype(float)
+        orcamento_mensal_sem_salario['Valor_2'] = orcamento_mensal_sem_salario['Valor_2'].str.replace('.','').str.replace(',','.')
+        orcamento_mensal_sem_salario['Valor_2'] = orcamento_mensal_sem_salario['Valor_2'].astype(float)
         orcamento_mensal_sem_salario = orcamento_mensal_sem_salario.groupby('Mês')['Valor_2'].sum()
         orcamento_mensal_sem_salario
         
