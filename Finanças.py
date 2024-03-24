@@ -323,6 +323,9 @@ with tab1:
             values_to_insert = novos_orcamentos_mensais_df.values.tolist()
             worksheet.insert_rows(values_to_insert, num_rows + 1)                 
 
+        orcamento_mensal_salario = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == 'Salário'] 
+        orcamento_mensal_salario
+
         
 with tab3:
     st.title("Análises Débitos")
