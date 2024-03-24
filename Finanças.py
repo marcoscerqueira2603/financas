@@ -378,7 +378,7 @@ with tab3:
 
     debito
     debito_classificacao_soma = debito.groupby(['Classificação'])['Valor'].sum()
-    #debito_classificacao_soma_total = debito['Valor'].sum()
+    debito_classificacao_soma_total = debito['Valor'].sum()
     #debito_classificacao_soma["Percentual"] = debito_classificacao_soma['Valor']/debito_classificacao_soma_total
     #debito_classificacao_soma
 
