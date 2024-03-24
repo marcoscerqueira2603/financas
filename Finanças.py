@@ -355,8 +355,8 @@ with tab3:
     debito_mes_consolidado =  pd.merge(debito_mes,orcamento_mensal_debito, on='Mês Referência',how='outer' )
     debito_mes_consolidado['Valor_Orcamento'] = debito_mes_consolidado['Valor_Orcamento'].str.replace(',','.')
     grafico_debito =  go.Figure()
-    grafico_debito.add_trace(go.Bar(x=debito_mes_consolidado['Mês Referência'], y=debito_mes_consolidado['Valor'] ))
-    grafico_debito.add_trace(go.Bar(x=debito_mes_consolidado['Mês Referência'], y=debito_mes_consolidado['Valor_Orcamento'] ))
+    grafico_debito.add_trace(go.Bar(x=debito_mes_consolidado['Mês Referência'], y=debito_mes_consolidado['Valor_Orcamento'] ), name='Orçado')
+    grafico_debito.add_trace(go.Bar(x=debito_mes_consolidado['Mês Referência'], y=debito_mes_consolidado['Valor'] ), name='Real')
     grafico_debito.update_layout(
         title= 'Orçado vs Real',
         xaxis = dict(title='Mês Referência'),
