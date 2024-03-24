@@ -404,5 +404,5 @@ with tab3:
     with col1:
         st.metric(label='Saldo Mês Atual', value=saldo_atual_debito_mes)
         grafico_debito
-        with col2:
-            grafico_debito_class_med
+    with col2:
+        grafico_debito_class_med
