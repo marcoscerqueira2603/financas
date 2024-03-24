@@ -351,3 +351,5 @@ with tab3:
     debito_mes  = debito.groupby(['Mês Referência'])['Valor'].sum()
     orcamento_mensal_debito = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == "Débito"]
     orcamento_mensal_debito =  orcamento_mensal_debito.rename(columns={'Mês': 'Mês Referência', 'Valor':'Valor_2'})
+    orcamento_mensal_debito
+    debito_mes
