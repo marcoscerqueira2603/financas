@@ -410,4 +410,5 @@ with tab3:
 
 with tab4:
     st.title("Análises Crédito")
+    credito['Valor'] = credito['Valor'].replace(",",".")
     credito
