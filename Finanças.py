@@ -343,6 +343,7 @@ with tab1:
         orcamento_mensal_consolidado
 
 with tab3:
+
     st.title("Análises Débitos")
 
     debito['Valor'] = debito['Valor'].str.replace(',', '.')
@@ -406,3 +407,7 @@ with tab3:
         grafico_debito
     with col2:
         grafico_debito_class_med
+
+with tab4:
+    st.title("Análises Crédito")
+    credito
