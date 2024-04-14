@@ -411,4 +411,6 @@ with tab3:
 with tab4:
     st.title("Análises Crédito")
     credito['Valor'] = credito['Valor'].str.replace(",",".")
-    credito
+    credito['Valor'] = credito['Valor'].astype(float)
+    credito_mes = credito.groupby(['Mês'])['Valor'].sum()
+    credito_mes
