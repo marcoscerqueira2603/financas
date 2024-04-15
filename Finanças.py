@@ -411,6 +411,9 @@ with tab4:
     credito['Valor'] = credito['Valor'].str.replace(",",".")
     credito['Valor'] = credito['Valor'].astype(float)
     credito['Mês'] = credito['Mês'].replace(lista_mes)
+    orcamento_mensal_credito['Mês'] = orcamento_mensal_credito['Mês'].str.replace(",", ".")
+    orcamento_mensal_credito['Mês'] = orcamento_mensal_credito['Mês'].astype(float)
+
     credito = credito.sort_values(by='Mês')
     credito_mes = credito.groupby(['Mês'])['Valor'].sum()
     credito_mes
