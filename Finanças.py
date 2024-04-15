@@ -418,7 +418,7 @@ with tab4:
     credito_mes = credito.groupby(['Mês'])['Valor'].sum()
     credito_mes = pd.merge(credito_mes, orcamento_mensal_credito, on ='Mês', how='outer')
     
-    credito_mes_nmeses = debito['Mês Referência'].nunique()-1
+    credito_mes_nmeses = debito['Mês Referência'].nunique()
 
     credito_mes_nmeses_bdfiltrada = credito_mes.iloc[0:credito_mes_nmeses, :]
     credito_mes_nmeses_bdfiltrada
