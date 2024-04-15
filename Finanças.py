@@ -413,7 +413,9 @@ with tab4:
     credito_mes = credito.groupby(['Mês'])['Valor'].sum()
     credito_mes
 
-    subs_cartao =  {'Crédito - Inter': 'Crédito','Crédito - Nubank': 'Crédito', 'Crédito - C6': 'Crédito','Crédito -  Renner': 'Crédito'}
-    orcamento_mensal['Tipo orçamento - Crédito compilado'] = orcamento_mensal['Tipo Orçamento'].replace(subs_cartao)
+    subs_cartao =  {'Mês': '1 - janeiro', 'Tipo Orçamento': 'Crédito', 'Valor': '450,0'}
+    subs_cartao =  pd.DataFrame(subs_cartao)
+    subs_cartao
+    #orcamento_mensal['Tipo orçamento - Crédito compilado'] = orcamento_mensal['Tipo Orçamento'].replace(subs_cartao)
     #orcamento_mensal_credito = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == "Crédito - Inter"]
-    orcamento_mensal
+    #orcamento_mensal
