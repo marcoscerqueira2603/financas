@@ -421,6 +421,7 @@ with tab4:
     credito_mes_nmeses = debito['Mês Referência'].nunique()
     credito_mes_nmeses_bdfiltrada = credito_mes.iloc[0:credito_mes_nmeses, :]
     credito_mes_nmeses_bdfiltrada
+    debito
     credito_mes_nmeses_bdfiltrada['Saldo'] = credito_mes_nmeses_bdfiltrada['Valor_Orcamento'] - credito_mes_nmeses_bdfiltrada['Valor']
     credito_mes_nmeses_bdfiltrado_saldo = round(credito_mes_nmeses_bdfiltrada['Saldo'].sum(),2)
     credito_mes_nmeses_bdfiltrado_real = round(credito_mes_nmeses_bdfiltrada['Valor'].sum(),2)
