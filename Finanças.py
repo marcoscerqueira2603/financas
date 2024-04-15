@@ -416,5 +416,6 @@ with tab4:
     credito['Valor'] = credito['Valor'].astype(float)
     lista_mes  = {1:'1 - janeiro', 2: '2 - fevereiro', 3:'3 - março',4: '4 - abril', 5: '5 - maio',6: '6 - junho', 7: '7 - julho', 8: '8 - agosto',9: '9 - setembro',10: '10 - outubro',11: '11 - novembro', 12: '12 - dezembro'}
     credito['Mês'] = credito['Mês'].replace(lista_mes)
-    credito_mes = credito.groupby(['Mês'])['Valor'].sum()
-    credito_mes
+    credito
+    #credito_mes = credito.groupby(['Mês'])['Valor'].sum()
+    #credito_mes
