@@ -299,12 +299,6 @@ with tab1:
 
         orcamentos_valor = float(orcamentos_valor)
 
-       
-        #soma_gastos = float(orcamento_casa) + float(orcamento_fieltorcedor)  + float(orcamento_cabelo) +  float(orcamento_celular) +  float(orcamento_spotify) + float(orcamento_passagem) + float(orcamento_segurocel)+ float(orcamento_casa)+ float(orcamento_tembici) + float(orcamento_crednubank) + float(orcamento_credinter) + float(orcamento_debito) +float(orcamento_juntar)
-        #sobra = float(orcamento_salario_base) - soma_gastos
-
-        #st.metric(label='Sobra Final', value=sobra)
-
         novos_orcamentos_mensais = []
 
         with st.form('form orcamento mensais'):
@@ -414,6 +408,7 @@ with tab4:
     lista_mes  = {1:'1 - janeiro', 2: '2 - fevereiro', 3:'3 - março',4: '4 - abril', 5: '5 - maio',6: '6 - junho', 7: '7 - julho', 8: '8 - agosto',9: '9 - setembro',10: '10 - outubro',11: '11 - novembro', 12: '12 - dezembro'}
     credito['Valor'] = credito['Valor'].str.replace(",",".")
     credito['Valor'] = credito['Valor'].astype(float)
+    credito['Mês'] = credito['Mês'].astype(str)
     lista_mes  = {1:'1 - janeiro', 2: '2 - fevereiro', 3:'3 - março',4: '4 - abril', 5: '5 - maio',6: '6 - junho', 7: '7 - julho', 8: '8 - agosto',9: '9 - setembro',10: '10 - outubro',11: '11 - novembro', 12: '12 - dezembro'}
     credito['Mês'] = credito['Mês'].replace(lista_mes)
     credito
