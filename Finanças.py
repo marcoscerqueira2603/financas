@@ -416,7 +416,7 @@ with tab4:
 
     credito = credito.sort_values(by='Mês')
     credito_mes = credito.groupby(['Mês'])['Valor'].sum()
+    credito_mes = pd.merge(credito_mes, orcamento_mensal_credito, on ='Mês', how='Outer')
     credito_mes
-
     orcamento_mensal_credito
     
