@@ -413,10 +413,10 @@ with tab4:
     credito['Mês'] = credito['Mês'].replace(lista_mes)
     orcamento_mensal_credito['Valor'] = orcamento_mensal_credito['Valor'].str.replace(",", ".")
     orcamento_mensal_credito['Valor'] = orcamento_mensal_credito['Valor'].astype(float)
-
+    orcamento_mensal_credito =  orcamento_mensal_credito.rename(columns={'Valor':'Valor_Orcamento'})
     credito = credito.sort_values(by='Mês')
     credito_mes = credito.groupby(['Mês'])['Valor'].sum()
-    credito_mes = pd.merge(credito_mes, orcamento_mensal_credito, on ='Mês', how='Inner')
+    credito_mes = pd.merge(credito_mes, orcamento_mensal_credito, on ='Mês', how='Outer')
     credito_mes
     orcamento_mensal_credito
     
