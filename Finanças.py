@@ -82,7 +82,7 @@ with tab1:
         debito_data = st.text_input('Insirir Data', key = "inserir-data-debito")
         debito_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-debito")
 
-        debito_classificacao = st.selectbox('Selecione o tipo:', ['Necessidade', 'Lazer - Corinthians', 'Lazer - Outros', 'Lazer - Comida', 'Comida','Outros'], key='class-debito')
+        debito_classificacao = st.selectbox('Selecione o tipo:', ['Necessidade', 'Lazer - Corinthians', 'Lazer - Outros', 'Lazer - Comida', 'Comida','Aplicativo de Transporte', 'Outros' ], key='class-debito')
         debito_valor = st.text_input('Insirir Valor', key = "inserir-valor-debito")
 
         if debito_valor == "":
