@@ -431,7 +431,11 @@ with tab4:
                                       text=credito_mes['Valor'],
                                       textposition='auto'))
     
-    col1, col2 = st.columns(2)
-
-    with col1:
-        credito_grafico
+    grafico_debito.update_layout(
+        title= 'Orçado vs Real',
+        xaxis = dict(title='Mês Referência', showgrid=False),
+        yaxis = dict(title='Valores', showgrid=False),
+        plot_bgcolor='rgba(0,0,0,0)'
+    )
+    
+    credito_grafico
