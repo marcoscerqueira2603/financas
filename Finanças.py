@@ -456,6 +456,7 @@ with tab4:
     
     credito
     credito_classificacao_agrupado = credito.groupby(['Classificação'])['Valor'].sum()
+    credito_classificacao_agrupado
     credito_classificacao_soma = credito['Valor'].sum()
     credito_classificacao_agrupado['Percentual'] = credito_classificacao_agrupado['Valor']/credito_classificacao_soma
     credito_classificacao_agrupado['Percentual'] = round(credito_classificacao_agrupado['Percentual']*100,2)
