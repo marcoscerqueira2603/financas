@@ -425,6 +425,12 @@ with tab4:
                                      text=credito_mes['Valor_Orcamento'],
                                      textposition ='auto')) 
     
+    credito_grafico.add_trace(go.Bar(x=credito_mes['Mês'], y=credito_mes['Valor'],
+                                      name='Real',
+                                      marker_color='#DC143C',
+                                      text=credito_mes['Valor'],
+                                      textposition='auto'))
+    
     col1, col2 = st.columns(2)
 
     with col1:
