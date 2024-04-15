@@ -286,7 +286,7 @@ with tab1:
 
     with st.expander('Orçamento Mês'):
         st.title('Orçamento do mês')
-        orcamentos_classificacao = st.selectbox('Selecione o tipo:', ['Salário', 'Casa', 'Fiel Torcedor', 'Cabelo', 'Internet Celular', 'Spotify','Passagem', 'Seguro Celular','Streaming','Tembici - Itaú','Crédito - Nubank', 'Crédito - Inter','Débito', 'Juntar'], key='class-orcamentos')
+        orcamentos_classificacao = st.selectbox('Selecione o tipo:', ['Salário', 'Casa', 'Fiel Torcedor', 'Cabelo', 'Internet Celular', 'Spotify','Passagem', 'Seguro Celular','Streaming','Tembici - Itaú','Crédito - Nubank', 'Crédito - Inter','Crédito - Renner','Débito', 'Juntar','Crédito'], key='class-orcamentos')
        
         orcamentos_mes_ref = st.selectbox('Selecione o mês referência:', ['1 - janeiro', '2 - fevereiro', '3 - março', '4 - abril', '5 - maio','6 - junho', '7 - julho','8 - agosto','9 - setembro','10 - outubro','11 - novembro','12 - dezembro'], key='class-orcamento')
 
@@ -317,6 +317,8 @@ with tab1:
             values_to_insert = novos_orcamentos_mensais_df.values.tolist()
             worksheet.insert_rows(values_to_insert, num_rows + 1)                 
 
+        orcamento_mensal_credito = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == "Crédito"]
+        orcamento_mensal =  orcamento_mensal[orcamento_mensal['Tipo Orçamento'] != "Crédito"]
         orcamento_mensal_salario = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == 'Salário'] 
         orcamento_mensal_sem_salario = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] != 'Salário']
         orcamento_mensal_sem_salario = orcamento_mensal_sem_salario[orcamento_mensal_sem_salario['Tipo Orçamento'] != 'Patrimonio que sobrou de 2023']
@@ -413,9 +415,5 @@ with tab4:
     credito_mes = credito.groupby(['Mês'])['Valor'].sum()
     credito_mes
 
-    subs_cartao =  {'Mês': '1 - janeiro', 'Tipo Orçamento': 'Crédito', 'Valor': '450,0'}
-    subs_cartao =  pd.DataFrame(subs_cartao)
-    subs_cartao
-    #orcamento_mensal['Tipo orçamento - Crédito compilado'] = orcamento_mensal['Tipo Orçamento'].replace(subs_cartao)
-    #orcamento_mensal_credito = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == "Crédito - Inter"]
-    #orcamento_mensal
+    orcamento_mensal_credito
+    
