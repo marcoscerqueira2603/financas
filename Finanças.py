@@ -419,6 +419,7 @@ with tab4:
     credito_mes = pd.merge(credito_mes, orcamento_mensal_credito, on ='Mês', how='outer')
     
     credito_grafico =  go.Figure()
+    credito_mes
 
     credito_grafico.add_trace(go.bar(x= credito_mes['Mês'], y= credito_mes['Valor_Orcamento'],
                                      name='Orçado',
