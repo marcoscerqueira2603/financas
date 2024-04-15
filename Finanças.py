@@ -421,10 +421,10 @@ with tab4:
     credito_grafico =  go.Figure()
 
     credito_grafico.add_trace(go.bar(x= credito_mes['Mês'], y= credito_mes['Valor_Orcamento'],
-                                     name='Orçado'),
+                                     name='Orçado',
                                      marker_color='#708090',
                                      text=credito_mes['Valor_Orcamento'],
-                                     textposition ='auto') 
+                                     textposition ='auto')) 
     
     col1, col2 = st.columns(2)
 
