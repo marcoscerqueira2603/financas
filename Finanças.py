@@ -170,7 +170,7 @@ with tab1:
         credito_valor = st.text_input('Insirir Valor Crédito', key = 'insirir-valor-credito')
         credito_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-credito')
         credito_classificacao = st.selectbox('Selecione o tipo:', ['Faturas 2023','Presente Pitica','Presentes - Família','Lazer','Roupas','Compras Minhas','Outros'], key='class-credito')
-        credito_cartao = st.selectbox('Selecione o cartão:', ['Inter','Nubank','C6'], key='cartao-credito')
+        credito_cartao = st.selectbox('Selecione o cartão:', ['Inter','Nubank','C6','Renner'], key='cartao-credito')
 
 
         if credito_valor == "":
@@ -410,7 +410,10 @@ with tab3:
 
 with tab4:
     st.title("Análises Crédito")
+
+    lista_mes  = {1:'1 - janeiro', 2: '2 - fevereiro', 3:'3 - março',4: '4 - abril', 5: '5 - maio',6: '6 - junho', 7: '7 - julho', 8: '8 - agosto',9: '9 - setembro',10: '10 - outubro',11: '11 - novembro', 12: '12 - dezembro'}
     credito['Valor'] = credito['Valor'].str.replace(",",".")
     credito['Valor'] = credito['Valor'].astype(float)
+    credito['Mês'] = credito['Mês'].str.replace(lista_mes)
     credito_mes = credito.groupby(['Mês'])['Valor'].sum()
     credito_mes
