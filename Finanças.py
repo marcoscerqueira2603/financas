@@ -456,9 +456,26 @@ with tab4:
     
     credito
     credito_classificacao_agrupado = credito.groupby(['Classificação'])['Valor'].sum().reset_index()
-    credito_classificacao_agrupado
     credito_classificacao_soma = credito['Valor'].sum()
     credito_classificacao_agrupado['Percentual'] = credito_classificacao_agrupado['Valor']/credito_classificacao_soma
     credito_classificacao_agrupado['Percentual'] = round(credito_classificacao_agrupado['Percentual']*100,2)
-    credito_classificacao_agrupado
-    grafico_credito
+
+    grafico_credito_class =  go.Figure()
+
+    grafico_credito_class.add_trace(go.Bar(x=credito_classificacao_agrupado['Classificação'],y=credito_classificacao_agrupado['Percentual'], 
+                                              marker_color='#0000FF',
+                                              text=credito_classificacao_agrupado['Percentual'],
+                                              textposition='auto'))
+    
+    grafico_credito_class.update_layout(
+        title= 'Percentual de gastos por itens total no ano',
+        xaxis = dict(title='Itens', showgrid=False),
+        yaxis = dict(title='Valores', showgrid=False),
+    )
+    
+    col1, col2 = st.columns(2)
+
+    with col1:
+        grafico_credito
+    with col2:
+        grafico_credito_class
