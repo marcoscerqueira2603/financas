@@ -412,5 +412,8 @@ with tab4:
     credito = credito.sort_values(by='Mês')
     credito_mes = credito.groupby(['Mês'])['Valor'].sum()
     credito_mes
-    orcamento_mensal_credito = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == "Crédito"]
-    orcamento_mensal_credito
+
+    subs_cartao =  {'Crédito - Inter': 'Crédito','Crédito - Nubank': 'Crédito', 'Crédito - C6': 'Crédito','Crédito -  Renner': 'Crédito'}
+    orcamento_mensal['Tipo orçamento - Crédito compilado'] = orcamento_mensal['Tipo Orçamento'].replace(subs_cartao)
+    #orcamento_mensal_credito = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == "Crédito - Inter"]
+    orcamento_mensal
