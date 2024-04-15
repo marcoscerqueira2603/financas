@@ -424,7 +424,7 @@ with tab4:
     credito_mes_nmeses_bdfiltrado_saldo = round(credito_mes_nmeses_bdfiltrada['Saldo'].sum(),2)
     credito_mes_nmeses_bdfiltrado_real = round(credito_mes_nmeses_bdfiltrada['Valor'].sum(),2)
     
-    credito
+    
     col1, col2 = st.columns(2)
     with col1:
         st.metric(label='Saldo até o mês atual',value=credito_mes_nmeses_bdfiltrado_saldo)
@@ -454,4 +454,9 @@ with tab4:
         plot_bgcolor='rgba(0,0,0,0)'
     )
     
+    credito_classificacao_agrupado = credito.groupby(['Classificação'])['Valor'].sum()
+    credito_classificacao_soma = credito['Valor'].sum()
+    credito_classificacao_agrupado['Percentual'] = credito_classificacao_agrupado['Valor']/credito_classificacao_soma
+    credito_classificacao_agrupado['Percentual'] = round(credito_classificacao_agrupado['Percentual']*100,2)
+    credito_classificacao_agrupado
     grafico_credito
