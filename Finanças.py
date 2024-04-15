@@ -430,7 +430,7 @@ with tab4:
     with col1:
         st.metric(label='Saldo até o mês atual',value=credito_mes_nmeses_bdfiltrado_saldo)
     with col2:
-        st.metric(label='Saldo até o mês atual',value=credito_mes_nmeses_bdfiltrado_real)
+        st.metric(label='Gasto até o mês atual',value=credito_mes_nmeses_bdfiltrado_real)
     
 
     
