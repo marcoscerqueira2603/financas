@@ -422,6 +422,7 @@ with tab4:
 
     credito_mes_nmeses_bdfiltrada = credito_mes.iloc[0:credito_mes_nmeses, :]
     credito_mes_nmeses_bdfiltrada
+    debito
 
     grafico_credito =  go.Figure()
     grafico_credito.add_trace(go.Bar(x= credito_mes['Mês'], y= credito_mes['Valor_Orcamento'],
