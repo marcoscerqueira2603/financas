@@ -422,8 +422,7 @@ with tab4:
     credito_mes_nmeses_bdfiltrada = credito_mes.iloc[0:credito_mes_nmeses, :]
     credito_mes_nmeses_bdfiltrada['Saldo'] = credito_mes_nmeses_bdfiltrada['Valor_Orcamento'] - credito_mes_nmeses_bdfiltrada['Valor']
     credito_mes_nmeses_bdfiltrado = round(credito_mes_nmeses_bdfiltrada['Saldo'].sum(),2)
-    credito_mes_nmeses_bdfiltrado
-    #st.metric(label='Saldo até o mês atual',value=credito_mes_nmeses_bdfiltrada)
+    st.metric(label='Saldo até o mês atual',value=credito_mes_nmeses_bdfiltrado)
     
 
     
