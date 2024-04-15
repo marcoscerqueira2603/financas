@@ -417,6 +417,16 @@ with tab4:
     credito = credito.sort_values(by='Mês')
     credito_mes = credito.groupby(['Mês'])['Valor'].sum()
     credito_mes = pd.merge(credito_mes, orcamento_mensal_credito, on ='Mês', how='outer')
-    credito_mes
-    orcamento_mensal_credito
     
+    credito_grafico =  go.Figure()
+
+    credito_grafico.add_trace(go.bar(x= credito_mes['Mês'], y= credito_mes['Valor_Orcamento'],
+                                     name='Orçado'),
+                                     marker_color='#708090',
+                                     text=credito_mes['Valor_Orcamento'],
+                                     textposition ='auto') 
+    
+    col1, col2 = st.columns(2)
+
+    with col1:
+        credito_grafico
