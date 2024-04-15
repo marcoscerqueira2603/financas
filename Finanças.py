@@ -454,7 +454,6 @@ with tab4:
         plot_bgcolor='rgba(0,0,0,0)'
     )
     
-    credito
     credito_classificacao_agrupado = credito.groupby(['Classificação'])['Valor'].sum().reset_index()
     credito_classificacao_soma = credito['Valor'].sum()
     credito_classificacao_agrupado['Percentual'] = credito_classificacao_agrupado['Valor']/credito_classificacao_soma
