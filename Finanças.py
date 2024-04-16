@@ -484,4 +484,5 @@ with tab5:
 
     vr['Valor'] = vr['Valor'].str.replace(',', '.')
     vr['Valor'] = vr['Valor'].astype(float)
-    vr
+    vr_agrupado = vr.groupby(['Mês Referência'])['Valor'].sum()
+    vr_agrupado
