@@ -521,7 +521,7 @@ with tab5:
 
 
     grafico_vr_class = px.bar(vr_agrupado2, x='Mês Referência', y='Valor', color='Classificação', barmode='stack',
-                              color_discrete_map={'Almoço no escritório': '#00BFFF', 'Outros': '#0000FF',  'Rua': '#7FFFD4', 'Saídas': '#8B008B','Saídas - Pitica':'#8B0000'})
+                              color_discrete_map={'Almoço no escritório': '#ADD8E6', 'Outros': '#00BFFF',  'Rua': '#0000FF', 'Saídas': '#191970','Saídas - Pitica':'#8B008B'})
 
 
     grafico_vr_class.update_traces(texttemplate='%{y}', textposition='inside')
