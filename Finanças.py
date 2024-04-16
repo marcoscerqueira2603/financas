@@ -482,4 +482,6 @@ with tab4:
 with tab5:
     st.title('Análise VR')
 
+    vr['Valor'] = vr['Valor'].str.replace(',', '.')
+    vr['Valor'] = vr['Valor'].astype(float)
     vr
