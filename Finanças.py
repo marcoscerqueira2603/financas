@@ -489,7 +489,6 @@ with tab5:
 
     vr_agrupado = vr.groupby(['Mês Referência'])['Valor'].sum()
     vr_agrupado2 = vr.groupby(['Mês Referência', 'Classificação'])['Valor'].sum().reset_index()
-    vr_agrupado2
 
 
 
