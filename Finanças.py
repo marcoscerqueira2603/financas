@@ -321,9 +321,6 @@ with tab1:
         orcamento_mensal_vr = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == "VR"]
         orcamento_mensal =  orcamento_mensal[(orcamento_mensal['Tipo Orçamento'] != "Crédito") &(orcamento_mensal['Tipo Orçamento'] != "VR")]
 
-
-
-
         orcamento_mensal_salario = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] == 'Salário'] 
         orcamento_mensal_sem_salario = orcamento_mensal[orcamento_mensal['Tipo Orçamento'] != 'Salário']
         orcamento_mensal_sem_salario = orcamento_mensal_sem_salario[orcamento_mensal_sem_salario['Tipo Orçamento'] != 'Patrimonio que sobrou de 2023']
@@ -491,3 +488,5 @@ with tab5:
     vr['Valor'] = vr['Valor'].astype(float)
     vr_agrupado = vr.groupby(['Mês Referência'])['Valor'].sum()
     vr_agrupado
+    orcamento_mensal
+    orcamento_mensal_vr
