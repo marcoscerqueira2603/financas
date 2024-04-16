@@ -489,6 +489,8 @@ with tab5:
 
     vr_agrupado = vr.groupby(['Mês Referência'])['Valor'].sum()
     orcamento_mensal_vr = orcamento_mensal_vr.rename(columns={'Mês': 'Mês Referência'}) 
+    orcamento_mensal_vr['Valor'] = orcamento_mensal_vr['Valor'].str.replace(',','.')
+    orcamento_mensal_vr['Valor'] = orcamento_mensal_vr['Valor'].astype(float)
     vr_agrupado = pd.merge(vr_agrupado, orcamento_mensal_vr, on='Mês Referência', how='outer')
     
 
