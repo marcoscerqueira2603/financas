@@ -522,4 +522,8 @@ with tab5:
 
     grafico_vr_class = px.bar(vr_agrupado2, x='Mês Referência', y='Valor', color='Classificação', barmode='stack')
 
-    grafico_vr
+    col1, col2 =  st.columns(2)
+    with col1:
+        grafico_vr
+    with col2:
+        grafico_vr_class
