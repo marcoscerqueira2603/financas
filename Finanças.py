@@ -489,10 +489,10 @@ with tab5:
 
     vr_agrupado = vr.groupby(['Mês Referência'])['Valor'].sum()
     vr_agrupado2 = vr.groupby(['Mês Referência', 'Classificação'])['Valor'].sum()
-    vr_agrupado2['Valor'] = vr_agrupado2['Valor'].str.replace(',','.')
-    vr_agrupado2['Valor'] = vr_agrupado2['Valor'].astype(float)
+    #vr_agrupado2['Valor'] = vr_agrupado2['Valor'].str.replace(',','.')
+    #vr_agrupado2['Valor'] = vr_agrupado2['Valor'].astype(float)
 
-    
+
     orcamento_mensal_vr = orcamento_mensal_vr.rename(columns={'Mês': 'Mês Referência'}) 
     orcamento_mensal_vr['Valor'] = orcamento_mensal_vr['Valor'].str.replace(',','.')
     orcamento_mensal_vr['Valor'] = orcamento_mensal_vr['Valor'].astype(float)
