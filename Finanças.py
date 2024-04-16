@@ -498,7 +498,7 @@ with tab5:
     vr_agrupado = pd.merge(vr_agrupado, orcamento_mensal_vr, on='Mês Referência', how='outer')
 
     vr_agrupado['Saldo'] = vr_agrupado['Valor_x'] - vr_agrupado['Valor_y']
-    vr_agrupado_ult_linha = vr_agrupado.iloc[-1]
+    vr_agrupado_ult_linha = vr_agrupado.tail(1)
     vr_agrupado_ult_linha
 
 
