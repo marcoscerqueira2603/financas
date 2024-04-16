@@ -500,8 +500,8 @@ with tab5:
                                      textposition ='auto')) 
     
     grafico_vr.add_trace(go.Bar(x= vr_agrupado['Mês Referência'], y= vr_agrupado['Valor_x'],
-                                     name='Orçado',
-                                     marker_color='#708090',
+                                     name='Real',
+                                     marker_color='#DC143C',
                                      text=vr_agrupado['Valor_x'],
                                      textposition ='auto'))
     
