@@ -497,12 +497,21 @@ with tab5:
     orcamento_mensal_vr['Valor'] = orcamento_mensal_vr['Valor'].astype(float)
     vr_agrupado = pd.merge(vr_agrupado, orcamento_mensal_vr, on='Mês Referência', how='outer')
 
-    vr_agrupado['Saldo'] = vr_agrupado['Valor_x'] - vr_agrupado['Valor_y']
+    vr_agrupado['Saldo'] = vr_agrupado['Valor_y'] - vr_agrupado['Valor_x']
     vr_agrupado_ult_linha = vr_agrupado.tail(1)
+
     vr_agrupado_ult_linha
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric(label='Saldo até o mês atual',value=vr_agrupado_ult_linha['Saldo'])
+  
+        
 
 
     grafico_vr =  go.Figure()
+
     grafico_vr.add_trace(go.Bar(x= vr_agrupado['Mês Referência'], y= vr_agrupado['Valor_y'],
                                      name='Orçado',
                                      marker_color='#708090',
