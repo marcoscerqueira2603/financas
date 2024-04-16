@@ -519,5 +519,7 @@ with tab5:
         plot_bgcolor='rgba(0,0,0,0)'
     )
 
-    grafico_vr_class =  px.bar(vr_agrupado2,x=['Mês Referência'], y='Valor', color='Classificação', barmode='stack')
+
+    grafico_vr_class = px.bar(vr_agrupado2, x='Mês Referência', y='Valor', color='Classificação', barmode='stack')
+
     grafico_vr
