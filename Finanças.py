@@ -488,23 +488,25 @@ with tab5:
     vr['Valor'] = vr['Valor'].astype(float)
 
     vr_agrupado = vr.groupby(['Mês Referência'])['Valor'].sum()
+    vr_agrupado2 = vr.groupby(['Mês Referência', 'Classificação'])['Valor'].sum()
+    vr_agrupado2
     orcamento_mensal_vr = orcamento_mensal_vr.rename(columns={'Mês': 'Mês Referência'}) 
     orcamento_mensal_vr['Valor'] = orcamento_mensal_vr['Valor'].str.replace(',','.')
     orcamento_mensal_vr['Valor'] = orcamento_mensal_vr['Valor'].astype(float)
-    vr_agrupado_grafico1 = pd.merge(vr_agrupado, orcamento_mensal_vr, on='Mês Referência', how='outer')
+    vr_agrupado = pd.merge(vr_agrupado, orcamento_mensal_vr, on='Mês Referência', how='outer')
     
 
     grafico_vr =  go.Figure()
-    grafico_vr.add_trace(go.Bar(x= vr_agrupado_grafico1['Mês Referência'], y= vr_agrupado_grafico1['Valor_y'],
+    grafico_vr.add_trace(go.Bar(x= vr_agrupado['Mês Referência'], y= vr_agrupado['Valor_y'],
                                      name='Orçado',
                                      marker_color='#708090',
-                                     text=vr_agrupado_grafico1['Valor_y'],
+                                     text=vr_agrupado['Valor_y'],
                                      textposition ='auto')) 
     
-    grafico_vr.add_trace(go.Bar(x= vr_agrupado_grafico1['Mês Referência'], y= vr_agrupado_grafico1['Valor_x'],
+    grafico_vr.add_trace(go.Bar(x= vr_agrupado['Mês Referência'], y= vr_agrupado['Valor_x'],
                                      name='Real',
                                      marker_color='#DC143C',
-                                     text=vr_agrupado_grafico1['Valor_x'],
+                                     text=vr_agrupado['Valor_x'],
                                      textposition ='auto'))
     
     grafico_vr.update_layout(
@@ -514,5 +516,5 @@ with tab5:
         plot_bgcolor='rgba(0,0,0,0)'
     )
 
-    vr_agrupado
+    
     grafico_vr
