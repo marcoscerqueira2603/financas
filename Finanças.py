@@ -478,3 +478,8 @@ with tab4:
         grafico_credito
     with col2:
         grafico_credito_class
+
+with tab4:
+    st.title('Análise VR')
+
+    vr
