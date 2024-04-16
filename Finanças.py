@@ -453,7 +453,6 @@ with tab4:
         title= 'Orçado vs Real',
         xaxis = dict(title='Mês Referência', showgrid=False),
         yaxis = dict(title='Valores', showgrid=False),
-        barmode='stack',
         plot_bgcolor='rgba(0,0,0,0)'
     )
     
@@ -514,4 +513,6 @@ with tab5:
         yaxis = dict(title='Valores', showgrid=False),
         plot_bgcolor='rgba(0,0,0,0)'
     )
+
+    vr_agrupado
     grafico_vr
