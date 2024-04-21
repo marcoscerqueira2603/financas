@@ -500,7 +500,7 @@ with tab5:
     vr_agrupado['Saldo'] = vr_agrupado['Valor_y'] - vr_agrupado['Valor_x']
     vr_agrupado_ult_linha = vr_agrupado.tail(1)
     
-    st.metric(label='Saldo até o mês atual',value=vr_agrupado_ult_linha['Saldo'])
+    st.metric(label='Saldo até o mês atual',value=round(vr_agrupado_ult_linha['Saldo'],2))
 
     grafico_vr =  go.Figure()
 
