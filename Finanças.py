@@ -5,7 +5,7 @@ import os
 from openpyxl import load_workbook
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime, date
+from datetime import datetime, date 
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
@@ -536,3 +536,21 @@ with tab5:
         grafico_vr
     with col2:
         grafico_vr_class
+
+with tab6:
+
+    with st.popover("Filtros"):
+        st.write('Oi,tudo bem?')
+        options = st.multiselect(
+    'What are your favorite colors',
+    ['Green', 'Yellow', 'Red', 'Blue'],
+    ['Yellow', 'Red'])
+        genre = st.radio(
+            "What's your favorite movie genre",
+            [":rainbow[Comedy]", "***Drama***", "Documentary :movie_camera:"],
+            captions = ["Laugh out loud.", "Get the popcorn.", "Never stop learning."])
+
+        if genre == ':rainbow[Comedy]':
+            st.write('You selected comedy.')
+        else:
+            st.write("You didn\'t select comedy.")
