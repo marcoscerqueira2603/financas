@@ -8,6 +8,6 @@ tox
 gspread
 drive
 oauth2client
-plotly==5.9.0
+plotly
 seaborn
 scipy
