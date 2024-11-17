@@ -484,6 +484,7 @@ with tab2:
 
     # pegando base de orcamento do excel e pegando o real gasto, além disso é feito alguns tratamentos
     orcamento_mensal_gastos = consultar_db("select * from financas.orcamento_mes")
+    orcamento_mensal_gastos
     orcamento_mensal['id_class'] = orcamento_mensal['id_mes'] + orcamento_mensal['classificacao_orcamento']
     orcamento_mensal_gastos['id_class'] = orcamento_mensal_gastos['id_mes'].astype(str) + orcamento_mensal_gastos['classificacao'].astype(str)
     orcamento_unificado = pd.merge(orcamento_mensal, orcamento_mensal_gastos, on='id_class', how='outer')
