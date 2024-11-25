@@ -14,6 +14,7 @@ from plotly.subplots import make_subplots
 import psycopg2
 from datetime import datetime
 from dateutil.relativedelta import relativedelta  
+from sqlalchemy.sql import text
 
 st.set_page_config(
     page_title="Finanças",
@@ -24,71 +25,38 @@ st.set_page_config(
 st.title('Página de Organização Financeira')
 
 
-load_dotenv()
-
-load_dotenv()
-
-DATABASE_HOST = os.getenv('DATABASE_HOST')
-DATABASE_PORT = os.getenv('DATABASE_PORT')
-DATABASE_NAME = os.getenv('DATABASE_NAME')
-DATABASE_USER = os.getenv('DATABASE_USER')
-DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
-
 template_dash = "plotly_white"
 bg_color_dash = "rgba(0,0,0,0)"
 
 #cores = "#f7a48b","#fd0a60" ,"#fb4848","#b88f93","#44749d", "#bfe4cd", "#fa8331","#f5f7bd", "#3d423c"
         #rosa, rosa forte, vermelho, roxo, azul, azul claro,laranja, amarelo claro, preto acizentado
 
+
+load_dotenv()
+
+
+# Configuração da conexão
+conn = st.connection("postgresql", type="sql")
+
+
 def consultar_db(query):
+    """
+    Consulta ao banco de dados usando st.connection.
+    Retorna um DataFrame com os resultados.
+    """
     try:
-        conn = psycopg2.connect(
-            host=DATABASE_HOST,
-            port=DATABASE_PORT,
-            dbname=DATABASE_NAME,
-            user=DATABASE_USER,
-            password=DATABASE_PASSWORD
-        )
-        cur = conn.cursor()
-        cur.execute(query)
-
-        resultados = cur.fetchall()
-        colunas = [desc[0] for desc in cur.description]
-
-        cur.close()
-        conn.close()
-
-        df = pd.DataFrame(resultados, columns=colunas)
-
+        # Realiza a consulta e retorna um DataFrame
+        df = conn.query(query, ttl="10m")  # Cache de 10 minutos
         return df
 
     except Exception as e:
-        print(f"Erro ao consultar o banco de dados: {e}")
+        st.write(f"Erro ao consultar o banco de dados: {e}")
         return None
-    
 
-def adicionar_dados(query,dados):
-    try:
-        conn = psycopg2.connect(
-            host=os.getenv('DATABASE_HOST'),
-            port=os.getenv('DATABASE_PORT'),
-            dbname=os.getenv('DATABASE_NAME'),
-            user=os.getenv('DATABASE_USER'),
-            password=os.getenv('DATABASE_PASSWORD')
-        )
-        
-        cur = conn.cursor()
-        cur.execute(query, dados)
-        conn.commit()
-        cur.close()
-        conn.close()
-        
-        st.write("Dados adicionado com sucesso ao BD.")
 
-    except Exception as e:
-        st.write(f"Erro ao adicionar dados ao banco de dados: {e}")
-        if conn:
-            conn.rollback()
+# Função para adicionar dados
+
+
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name("chave_api.json", scope)
@@ -127,41 +95,65 @@ with tab1:
         st.title('Débito')
 
         #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
-
-        #a partir do calculo de data conseguimos ter o mes e jogamos lá
-        debito_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2024','02_2024','03_2024','04_2024','05_2024','06_2024','07_2024','08_2024','09_2024','10_2024','11_2024','12_2024'], key='class-mesref_debito')
-        debito_data = st.text_input('Insirir Data', key = "inserir-data-debito")
-        debito_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-debito")
-
-        debito_classificacao = st.selectbox('Selecione o tipo:', ['Necessidade', 'Lazer - Corinthians', 'Lazer - Outros', 'Lazer - Comida', 'Comida','Aplicativo de Transporte', 'Outros' ], key='class-debito')
-        debito_valor = st.text_input('Insirir Valor', key = "inserir-valor-debito")
-        debito_compracredito = st.selectbox('Selecione o tipo:', ['Não', 'Sim, com pagamento', 'Sim, sem pagamento'], key='compra-credito-debito')
-
-        if debito_valor == "":
-            debito_valor = 1.0
-        else:
-            debito_valor = debito_valor
-
-        debito_valor = float(debito_valor)
-
-        if debito_data  == "":
-            debito_data = "08/02/2000"
-        else:
-            debito_data = debito_data    
-
-        query_add_debito = """
-                    INSERT INTO financas.debito(id_mes, data, classificacao,descricao, debito_compra_credito, valor)
-                    VALUES (%s, %s, %s, %s, %s, %s);
-                    """
-
         novos_debitos = []
 
+
         with st.form('form débito'):
-            if st.form_submit_button('Adicionar Débito'):
-                novo_debito = [debito_mes_ref, debito_data, debito_classificacao,debito_descrição,debito_compracredito, debito_valor]
+            # Campos para inserir as informações do débito
+            debito_mes_ref = st.selectbox('Selecione o mês referência:', 
+                                        ['01_2024','02_2024','03_2024','04_2024','05_2024','06_2024','07_2024',
+                                        '08_2024','09_2024','10_2024','11_2024','12_2024'], key='class-mesref_debito')
+
+            debito_data = st.text_input('Insirir Data', key="inserir-data-debito")
+            debito_descricao = st.text_input('Insirir Descrição', key="inserir-descricao-debito")
+
+            debito_classificacao = st.selectbox('Selecione o tipo:', 
+                                            ['Necessidade', 'Lazer - Corinthians', 'Lazer - Outros', 'Lazer - Comida', 
+                                                'Comida', 'Aplicativo de Transporte', 'Outros'], key='class-debito')
+
+            debito_valor = st.text_input('Insirir Valor', key="inserir-valor-debito")
+            debito_compracredito = st.selectbox('Selecione o tipo:', 
+                                            ['Não', 'Sim, com pagamento', 'Sim, sem pagamento'], key='compra-credito-debito')
+
+            # Verificação de valor (caso esteja vazio, coloca 1.0 como padrão)
+            if debito_valor == "":
+                debito_valor = 1.0
+            else:
+                debito_valor = float(debito_valor)
+
+            # Definindo data padrão caso o campo esteja vazio
+            if debito_data == "":
+                debito_data = "08/02/2000"
+            
+            # Botão de envio do formulário
+            submit_button = st.form_submit_button("Adicionar Débito")
+
+            if submit_button:
+                with conn.session as session:
+                    # Declarar a query como um texto SQL explícito
+                    query = text("""
+                        INSERT INTO financas.debito
+                        (id_mes, data, classificacao, descricao, debito_compra_credito, valor)
+                        VALUES (:id_mes, :data, :classificacao, :descricao, :debito_compra_credito, :valor);
+                    """)
+                    # Executar a query
+                    session.execute(query, {
+                        "id_mes": debito_mes_ref,
+                        "data": debito_data,
+                        "classificacao": debito_classificacao,
+                        "descricao": debito_descricao,
+                        "debito_compra_credito": debito_compracredito,
+                        "valor": debito_valor
+                    })
+                    # Confirmar as alterações
+                    session.commit()
+                    st.success("Débito adicionado com sucesso!")
+
+                # Adiciona o novo débito à lista de débitos
+                novo_debito = [debito_mes_ref, debito_data, debito_classificacao, debito_descricao, debito_compracredito, debito_valor]
                 novos_debitos.append(novo_debito)
-                adicionar_dados(query_add_debito,novo_debito)
-                st.write("Operação totalmente concluída.")    
+
+
 
 
         if novos_debitos:
@@ -484,9 +476,8 @@ with tab2:
 
     # pegando base de orcamento do excel e pegando o real gasto, além disso é feito alguns tratamentos
     orcamento_mensal_gastos = consultar_db("select * from financas.orcamento_mes")
-    orcamento_mensal_gastos
     orcamento_mensal['id_class'] = orcamento_mensal['id_mes'] + orcamento_mensal['classificacao_orcamento']
-    orcamento_mensal_gastos['id_class'] = orcamento_mensal_gastos['id_mes'].astype(str) + orcamento_mensal_gastos['classificacao'].astype(str)
+    orcamento_mensal_gastos['id_class'] = orcamento_mensal_gastos['id_mes'] + orcamento_mensal_gastos['classificacao']
     orcamento_unificado = pd.merge(orcamento_mensal, orcamento_mensal_gastos, on='id_class', how='outer')
     orcamento_unificado['valor'] = orcamento_unificado['valor'].astype(float) 
     orcamento_unificado['Saldo'] = np.where(
