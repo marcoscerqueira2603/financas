@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from openpyxl import load_workbook
 import gspread
 from google.auth.transport.requests import Request
+from google.auth import exceptions, credentials
 from google.oauth2.service_account import Credentials
 from datetime import datetime, date 
 import numpy as np
@@ -12,7 +13,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import psycopg2
-from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedeltass
 
 st.set_page_config(
     page_title="Finanças",
@@ -55,7 +56,6 @@ def consultar_db(query):
 # Função para adicionar dados
 
 
-
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
 
 # Caminho para o arquivo da chave de autenticação
@@ -66,7 +66,10 @@ creds = None
 
 # Verificar se existe um token salvo, senão gerar novas credenciais
 if os.path.exists('token.json'):
-    creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    try:
+        creds = credentials.Credentials.from_authorized_user_file('token.json', SCOPES)
+    except exceptions.GoogleAuthError as e:
+        st.error(f"Erro ao carregar o token: {e}")
 
 # Se não existir o token ou as credenciais estiverem expiradas, renovar ou criar novas
 if not creds or not creds.valid:
@@ -89,6 +92,7 @@ def load_data_from_sheet(sheet_url):
     worksheet = sheet.get_worksheet(0)  # Assume que estamos acessando a primeira aba
     data = worksheet.get_all_records()  # Pega todos os dados como uma lista de dicionários
     return pd.DataFrame(data)
+
 
 
 # Carregamento dos dados
