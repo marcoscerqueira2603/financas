@@ -28,20 +28,19 @@ bg_color_dash = "rgba(0,0,0,0)"
 
 postgresql_config = st.secrets["connections"]["postgresql"]
 
-# Garantir que os valores não contenham espaços ou caracteres inválidos
-username = postgresql_config["username"]
-password = postgresql_config["password"]
-host = postgresql_config["host"]
-port = postgresql_config["port"]
-dbname = postgresql_config["dbname"]
+config = st.secrets["connections"]["postgresql"]
 
-# Montar a URL de conexão corretamente
-DATABASE_URL = f"postgresql://{username}:{password}@{host}:{port}/{dbname}"
+# Gerando a URL de conexão corretamente
+DATABASE_URL = (
+    f"{config['dialect']}://{config['username']}:{config['password']}"
+    f"@{config['host']}:{config['port']}/{config['dbname']}"
+)
 
-# Criar a conexão com o banco de dados utilizando SQLAlchemy
+# Criando engine e sessão do SQLAlchemy
 engine = create_engine(DATABASE_URL, pool_size=10, max_overflow=20)
 Session = sessionmaker(bind=engine)
 session = Session()
+
 
 def consultar_db(query):
     """
