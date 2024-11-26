@@ -4,9 +4,8 @@ import os
 from dotenv import load_dotenv
 from openpyxl import load_workbook
 import gspread
+from google.auth import exceptions
 from google.auth.transport.requests import Request
-from google.auth.exceptions import GoogleAuthError
-from google.oauth2.credentials import Credentials
 from datetime import datetime, date
 import numpy as np
 import plotly.express as px
@@ -48,34 +47,14 @@ def consultar_db(query):
         return None
 
 # Função para adicionar dados
+gsheets_secrets = st.secrets["connections"]["gsheets"]
 
-SERVICE_ACCOUNT_FILE = "chave_api.json"
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-
-# Inicializar a variável `creds` como None
-creds = None
-
-# Verificar se existe um token salvo (token.json), senão gerar novas credenciais
-if os.path.exists('token.json'):
-    try:
-        creds = credentials.Credentials.from_authorized_user_file('token.json', SCOPES)
-    except exceptions.GoogleAuthError as e:
-        st.error(f"Erro ao carregar o token: {e}")
-
-# Se não existir o token ou as credenciais estiverem expiradas, renovar ou criar novas
-if not creds or not creds.valid:
-    if creds and creds.expired and creds.refresh_token:
-        creds.refresh(Request())
-    else:
-        # Usar o arquivo de chave da conta de serviço para obter as credenciais
-        creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-    
-    # Salvar o token atualizado para uso futuro
-    with open('token.json', 'w') as token:
-        token.write(creds.to_json())
-
-# Autenticando o cliente gspread com as credenciais
-client = gspread.authorize(creds)
+# Autenticando com gspread usando as credenciais do segredo
+try:
+    creds = gspread.service_account_from_dict(gsheets_secrets)
+    client = gspread.authorize(creds)
+except exceptions.GoogleAuthError as e:
+    st.error(f"Erro ao autenticar no Google Sheets: {e}")
 
 # Função para carregar dados da planilha
 @st.cache_data(ttl=180)
@@ -84,6 +63,8 @@ def load_data_from_sheet(sheet_url):
     worksheet = sheet.get_worksheet(0)  # Assume que estamos acessando a primeira aba
     data = worksheet.get_all_records()  # Pega todos os dados como uma lista de dicionários
     return pd.DataFrame(data)
+
+
 
 
 
