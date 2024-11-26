@@ -13,7 +13,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import psycopg2
-from dateutil.relativedelta import relativedeltass
+from dateutil.relativedelta import relativedelta
 
 st.set_page_config(
     page_title="Finanças",
