@@ -61,17 +61,21 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapi
 # Caminho para o arquivo da chave de autenticação
 SERVICE_ACCOUNT_FILE = "chave_api.json"
 
-reds = None
+# Inicializar a variável `creds` como None
+creds = None
+
+# Verificar se existe um token salvo, senão gerar novas credenciais
 if os.path.exists('token.json'):
     creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    
-# Se não existirem credenciais ou elas estiverem inválidas, pede nova autenticação
+
+# Se não existir o token ou as credenciais estiverem expiradas, renovar ou criar novas
 if not creds or not creds.valid:
     if creds and creds.expired and creds.refresh_token:
         creds.refresh(Request())
     else:
         creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-    # Salvar o token para futuras execuções
+    
+    # Salvar o token atualizado
     with open('token.json', 'w') as token:
         token.write(creds.to_json())
 
@@ -85,6 +89,7 @@ def load_data_from_sheet(sheet_url):
     worksheet = sheet.get_worksheet(0)  # Assume que estamos acessando a primeira aba
     data = worksheet.get_all_records()  # Pega todos os dados como uma lista de dicionários
     return pd.DataFrame(data)
+
 
 # Carregamento dos dados
 debito = load_data_from_sheet(st.secrets["url_extrato_debito"])
