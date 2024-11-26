@@ -13,6 +13,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import psycopg2
 from dateutil.relativedelta import relativedelta
+from sqlalchemy import text
 
 st.set_page_config(
     page_title="Finanças",
