@@ -49,19 +49,17 @@ def consultar_db(query):
 
 # Função para adicionar dados
 
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-
-# Caminho para o arquivo da chave de autenticação
 SERVICE_ACCOUNT_FILE = "chave_api.json"
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
 
 # Inicializar a variável `creds` como None
 creds = None
 
-# Verificar se existe um token salvo, senão gerar novas credenciais
+# Verificar se existe um token salvo (token.json), senão gerar novas credenciais
 if os.path.exists('token.json'):
     try:
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    except GoogleAuthError as e:
+        creds = credentials.Credentials.from_authorized_user_file('token.json', SCOPES)
+    except exceptions.GoogleAuthError as e:
         st.error(f"Erro ao carregar o token: {e}")
 
 # Se não existir o token ou as credenciais estiverem expiradas, renovar ou criar novas
@@ -69,13 +67,14 @@ if not creds or not creds.valid:
     if creds and creds.expired and creds.refresh_token:
         creds.refresh(Request())
     else:
+        # Usar o arquivo de chave da conta de serviço para obter as credenciais
         creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
     
-    # Salvar o token atualizado
+    # Salvar o token atualizado para uso futuro
     with open('token.json', 'w') as token:
         token.write(creds.to_json())
 
-# Autenticando o cliente gspread
+# Autenticando o cliente gspread com as credenciais
 client = gspread.authorize(creds)
 
 # Função para carregar dados da planilha
