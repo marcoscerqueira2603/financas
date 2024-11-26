@@ -69,15 +69,15 @@ def load_data_from_sheet(sheet_url):
 
 
 # Carregamento dos dados
-debito = load_data_from_sheet(st.secrets["url_extrato_debito"])
-credito = load_data_from_sheet(st.secrets["url_extrato_credito"])
-vr = load_data_from_sheet(st.secrets["url_extrato_vr"])
-receita = load_data_from_sheet(st.secrets["url_extrato_receitas"])
-fixos = load_data_from_sheet(st.secrets["url_extrato_fixos"])
-orcamento_mensal = load_data_from_sheet(st.secrets["url_orcamento_mensal"])
-investimentos = load_data_from_sheet(st.secrets["url_investimento"])
-emprestimos = load_data_from_sheet(st.secrets["url_emprestimos"])
-orcamento_mensal = load_data_from_sheet(st.secrets["url_orcamento"])
+debito = load_data_from_sheet(gsheets_secrets["url_extrato_debito"])
+credito = load_data_from_sheet(gsheets_secrets["url_extrato_credito"])
+vr = load_data_from_sheet(gsheets_secrets["url_extrato_vr"])
+receita = load_data_from_sheet(gsheets_secrets["url_extrato_receitas"])
+fixos = load_data_from_sheet(gsheets_secrets["url_extrato_fixos"])
+orcamento_mensal = load_data_from_sheet(gsheets_secrets["url_orcamento_mensal"])
+investimentos = load_data_from_sheet(gsheets_secrets["url_investimento"])
+emprestimos = load_data_from_sheet(gsheets_secrets["url_emprestimos"])
+orcamento_mensal = load_data_from_sheet(gsheets_secrets["url_orcamento"])
 
 
 
