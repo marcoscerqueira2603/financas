@@ -64,9 +64,7 @@ with tab1:
     with st.expander('Débito'):
         st.title('Débito')
 
-        #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
         novos_debitos = []
-
 
         with st.form('form débito'):
             # Campos para inserir as informações do débito
@@ -99,14 +97,15 @@ with tab1:
             submit_button = st.form_submit_button("Adicionar Débito")
 
             if submit_button:
-                with conn.session as session:
+                try:
                     # Declarar a query como um texto SQL explícito
                     query = text("""
                         INSERT INTO financas.debito
                         (id_mes, data, classificacao, descricao, debito_compra_credito, valor)
                         VALUES (:id_mes, :data, :classificacao, :descricao, :debito_compra_credito, :valor);
                     """)
-                    # Executar a query
+
+                    # Executar a query com os parâmetros passados
                     session.execute(query, {
                         "id_mes": debito_mes_ref,
                         "data": debito_data,
@@ -115,15 +114,18 @@ with tab1:
                         "debito_compra_credito": debito_compracredito,
                         "valor": debito_valor
                     })
+
                     # Confirmar as alterações
                     session.commit()
+
                     st.success("Débito adicionado com sucesso!")
+                except Exception as e:
+                    st.error(f"Erro ao adicionar débito: {e}")
+                    session.rollback()  # Em caso de erro, faz rollback da transação
 
                 # Adiciona o novo débito à lista de débitos
                 novo_debito = [debito_mes_ref, debito_data, debito_classificacao, debito_descricao, debito_compracredito, debito_valor]
                 novos_debitos.append(novo_debito)
-
-
 
 
 
