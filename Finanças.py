@@ -49,9 +49,23 @@ def consultar_db(query):
 # Função para adicionar dados
 gsheets_secrets = st.secrets["connections"]["gsheets"]
 
+# Certifique-se de que o dicionário de credenciais está correto
+creds = {
+    "type": gsheets_secrets["type"],
+    "project_id": gsheets_secrets["project_id"],
+    "private_key_id": gsheets_secrets["private_key_id"],
+    "private_key": gsheets_secrets["private_key"],
+    "client_email": gsheets_secrets["client_email"],
+    "client_id": gsheets_secrets["client_id"],
+    "auth_uri": gsheets_secrets["auth_uri"],
+    "token_uri": gsheets_secrets["token_uri"],
+    "auth_provider_x509_cert_url": gsheets_secrets["auth_provider_x509_cert_url"],
+    "client_x509_cert_url": gsheets_secrets["client_x509_cert_url"]
+}
+
 # Autenticando com gspread usando as credenciais do segredo
 try:
-    creds = gspread.service_account_from_dict(gsheets_secrets)
+    creds = gspread.service_account_from_dict(creds)
     client = gspread.authorize(creds)
 except exceptions.GoogleAuthError as e:
     st.error(f"Erro ao autenticar no Google Sheets: {e}")
