@@ -13,7 +13,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import psycopg2
 from dateutil.relativedelta import relativedelta
-from sqlalchemy import text
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import sessionmaker
 
 st.set_page_config(
     page_title="Finanças",
@@ -27,19 +28,26 @@ bg_color_dash = "rgba(0,0,0,0)"
 
 load_dotenv()
 
-# Configuração da conexão
-conn = st.connection("postgresql", type="sql")
+# Configuração da conexão com o PostgreSQL usando as credenciais armazenadas no st.secrets
+postgresql_config = st.secrets["connections"]["postgresql"]
+
+# Criar a URL de conexão do PostgreSQL a partir das credenciais do st.secrets
+DATABASE_URL = f"postgresql://{postgresql_config['username']}:{postgresql_config['password']}@{postgresql_config['host']}:{postgresql_config['port']}/{postgresql_config['dbname']}"
+
+# Criar a conexão com o banco de dados utilizando SQLAlchemy
+engine = create_engine(DATABASE_URL, pool_size=10, max_overflow=20)  # Ajuste pool_size conforme necessário
+Session = sessionmaker(bind=engine)
+session = Session()
 
 def consultar_db(query):
     """
-    Consulta ao banco de dados usando st.connection.
+    Consulta ao banco de dados usando SQLAlchemy.
     Retorna um DataFrame com os resultados.
     """
     try:
-        # Realiza a consulta e retorna um DataFrame
-        df = conn.query(query, ttl="10m")  # Cache de 10 minutos
+        # Executando a consulta e retornando um DataFrame
+        df = pd.read_sql(query, engine)
         return df
-
     except Exception as e:
         st.write(f"Erro ao consultar o banco de dados: {e}")
         return None
