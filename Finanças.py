@@ -5,9 +5,9 @@ from dotenv import load_dotenv
 from openpyxl import load_workbook
 import gspread
 from google.auth.transport.requests import Request
-from google.auth import exceptions, credentials
-from google.oauth2.service_account import Credentials
-from datetime import datetime, date 
+from google.auth.exceptions import GoogleAuthError
+from google.oauth2.credentials import Credentials
+from datetime import datetime, date
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
@@ -20,23 +20,18 @@ st.set_page_config(
     layout="wide"
 )
 
-
 st.title('Página de Organização Financeira')
-
 
 template_dash = "plotly_white"
 bg_color_dash = "rgba(0,0,0,0)"
 
-#cores = "#f7a48b","#fd0a60" ,"#fb4848","#b88f93","#44749d", "#bfe4cd", "#fa8331","#f5f7bd", "#3d423c"
-        #rosa, rosa forte, vermelho, roxo, azul, azul claro,laranja, amarelo claro, preto acizentado
-
+# Cores: rosa, rosa forte, vermelho, roxo, azul, azul claro, laranja, amarelo claro, preto acizentado
+# "#f7a48b", "#fd0a60", "#fb4848", "#b88f93", "#44749d", "#bfe4cd", "#fa8331", "#f5f7bd", "#3d423c"
 
 load_dotenv()
 
-
 # Configuração da conexão
 conn = st.connection("postgresql", type="sql")
-
 
 def consultar_db(query):
     """
@@ -52,9 +47,7 @@ def consultar_db(query):
         st.write(f"Erro ao consultar o banco de dados: {e}")
         return None
 
-
 # Função para adicionar dados
-
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
 
@@ -67,8 +60,8 @@ creds = None
 # Verificar se existe um token salvo, senão gerar novas credenciais
 if os.path.exists('token.json'):
     try:
-        creds = credentials.Credentials.from_authorized_user_file('token.json', SCOPES)
-    except exceptions.GoogleAuthError as e:
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    except GoogleAuthError as e:
         st.error(f"Erro ao carregar o token: {e}")
 
 # Se não existir o token ou as credenciais estiverem expiradas, renovar ou criar novas
