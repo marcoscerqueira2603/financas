@@ -1,20 +1,18 @@
-from calendar import c
 import streamlit as st
 import pandas as pd
 import os
 from dotenv import load_dotenv
 from openpyxl import load_workbook
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.auth.transport.requests import Request
+from google.oauth2.service_account import Credentials
 from datetime import datetime, date 
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import psycopg2
-from datetime import datetime
-from dateutil.relativedelta import relativedelta  
-from sqlalchemy.sql import text
+from dateutil.relativedelta import relativedelta
 
 st.set_page_config(
     page_title="Finanças",
@@ -58,20 +56,35 @@ def consultar_db(query):
 
 
 
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("chave_api.json", scope)
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+
+# Caminho para o arquivo da chave de autenticação
+SERVICE_ACCOUNT_FILE = "chave_api.json"
+
+reds = None
+if os.path.exists('token.json'):
+    creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    
+# Se não existirem credenciais ou elas estiverem inválidas, pede nova autenticação
+if not creds or not creds.valid:
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+    else:
+        creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    # Salvar o token para futuras execuções
+    with open('token.json', 'w') as token:
+        token.write(creds.to_json())
+
+# Autenticando o cliente gspread
 client = gspread.authorize(creds)
 
-
-
-
+# Função para carregar dados da planilha
 @st.cache_data(ttl=180)
 def load_data_from_sheet(sheet_url):
     sheet = client.open_by_url(sheet_url)
     worksheet = sheet.get_worksheet(0)  # Assume que estamos acessando a primeira aba
     data = worksheet.get_all_records()  # Pega todos os dados como uma lista de dicionários
     return pd.DataFrame(data)
-
 
 # Carregamento dos dados
 debito = load_data_from_sheet(st.secrets["url_extrato_debito"])
