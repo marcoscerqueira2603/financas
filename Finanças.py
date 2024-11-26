@@ -24,9 +24,6 @@ st.title('Página de Organização Financeira')
 template_dash = "plotly_white"
 bg_color_dash = "rgba(0,0,0,0)"
 
-# Cores: rosa, rosa forte, vermelho, roxo, azul, azul claro, laranja, amarelo claro, preto acizentado
-# "#f7a48b", "#fd0a60", "#fb4848", "#b88f93", "#44749d", "#bfe4cd", "#fa8331", "#f5f7bd", "#3d423c"
-
 load_dotenv()
 
 # Configuração da conexão
@@ -65,8 +62,8 @@ creds = {
 
 # Autenticando com gspread usando as credenciais do segredo
 try:
-    creds = gspread.service_account_from_dict(creds)
-    client = gspread.authorize(creds)
+    # Usando service_account_from_dict para obter o cliente
+    client = gspread.service_account_from_dict(creds)
 except exceptions.GoogleAuthError as e:
     st.error(f"Erro ao autenticar no Google Sheets: {e}")
 
@@ -78,10 +75,6 @@ def load_data_from_sheet(sheet_url):
     data = worksheet.get_all_records()  # Pega todos os dados como uma lista de dicionários
     return pd.DataFrame(data)
 
-
-
-
-
 # Carregamento dos dados
 debito = load_data_from_sheet(gsheets_secrets["url_extrato_debito"])
 credito = load_data_from_sheet(gsheets_secrets["url_extrato_credito"])
@@ -92,7 +85,6 @@ orcamento_mensal = load_data_from_sheet(gsheets_secrets["url_orcamento_mensal"])
 investimentos = load_data_from_sheet(gsheets_secrets["url_investimento"])
 emprestimos = load_data_from_sheet(gsheets_secrets["url_emprestimos"])
 orcamento_mensal = load_data_from_sheet(gsheets_secrets["url_orcamento"])
-
 
 
 
