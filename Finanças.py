@@ -15,6 +15,7 @@ import psycopg2
 from dateutil.relativedelta import relativedelta
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
+from urllib.parse import quote
 
 st.set_page_config(
     page_title="Finanças",
@@ -30,9 +31,12 @@ postgresql_config = st.secrets["connections"]["postgresql"]
 
 config = st.secrets["connections"]["postgresql"]
 
+
+password = quote(config["password"])
+
 # Gerando a URL de conexão corretamente
 DATABASE_URL = (
-    f"{config['dialect']}://{config['username']}:{config['password']}"
+    f"{config['dialect']}://{config['username']}:{password}"
     f"@{config['host']}:{config['port']}/{config['dbname']}"
 )
 
