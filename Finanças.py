@@ -6,16 +6,18 @@ from openpyxl import load_workbook
 import gspread
 from google.auth import exceptions
 from google.auth.transport.requests import Request
+from google.oauth2.service_account import Credentials
 from datetime import datetime, date
+import json
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import psycopg2
 from dateutil.relativedelta import relativedelta
-from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker
-from urllib.parse import quote
+from oauth2client.service_account import ServiceAccountCredentials
+from streamlit_gsheets import GSheetsConnection
+
 
 st.set_page_config(
     page_title="Finanças",
@@ -27,41 +29,30 @@ st.title('Página de Organização Financeira')
 template_dash = "plotly_white"
 bg_color_dash = "rgba(0,0,0,0)"
 
-postgresql_config = st.secrets["connections"]["postgresql"]
-
-config = st.secrets["connections"]["postgresql"]
 
 
-password = quote(config["password"])
 
-# Gerando a URL de conexão corretamente
-DATABASE_URL = (
-    f"{config['dialect']}://{config['username']}:{password}"
-    f"@{config['host']}:{config['port']}/{config['dbname']}"
-)
-
-# Criando engine e sessão do SQLAlchemy
-engine = create_engine(DATABASE_URL, pool_size=10, max_overflow=20)
-Session = sessionmaker(bind=engine)
-session = Session()
-
-
-def consultar_db(query):
-    """
-    Consulta ao banco de dados usando SQLAlchemy.
-    Retorna um DataFrame com os resultados.
-    """
-    try:
-        # Executando a consulta e retornando um DataFrame
-        df = pd.read_sql(query, engine)
-        return df
-    except Exception as e:
-        st.write(f"Erro ao consultar o banco de dados: {e}")
-        return None
-
-# Função para adicionar dados
+conn = st.connection("gsheets", type=GSheetsConnection)
+# Leia os dados da planilha
+url_debito = st.secrets["connections"]["gsheets"]["url_extrato_debito"]
+url_credito = st.secrets["connections"]["gsheets"]["url_extrato_credito"]
+url_extrato_vr = st.secrets["connections"]["gsheets"]["url_extrato_vr"]
+url_receitas = st.secrets["connections"]["gsheets"]["url_extrato_receitas"]
+url_extrato_fixos =  st.secrets["connections"]["gsheets"]["url_extrato_fixos"]
+url_orcamento =  st.secrets["connections"]["gsheets"]["url_orcamento"]
+url_investimento = st.secrets["connections"]["gsheets"]["url_investimento"]
+url_emprestimos = st.secrets["connections"]["gsheets"]["url_emprestimos"]
 
 
+
+
+debito = conn.read(spreadsheet= url_debito, ttl=10)
+credito = conn.read(spreadsheet= url_credito, ttl=10)
+receita = conn.read(spreadsheet= url_receitas,ttl=10)
+fixo = conn.read(spreadsheet= url_extrato_fixos,ttl=10)
+investimento = conn.read(spreadsheet= url_investimento,ttl=10)
+emprestimo = conn.read(spreadsheet= url_emprestimos,ttl=10)
+vr = conn.read(spreadsheet= url_extrato_vr,ttl=10)
 
 
 tab1, tab2 = st.tabs(['Adicionar dados','Visualização'])
@@ -71,7 +62,9 @@ with tab1:
     with st.expander('Débito'):
         st.title('Débito')
 
+        #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
         novos_debitos = []
+
 
         with st.form('form débito'):
             # Campos para inserir as informações do débito
@@ -104,38 +97,265 @@ with tab1:
             submit_button = st.form_submit_button("Adicionar Débito")
 
             if submit_button:
-                try:
-                    # Declarar a query como um texto SQL explícito
-                    query = text("""
-                        INSERT INTO financas.debito
-                        (id_mes, data, classificacao, descricao, debito_compra_credito, valor)
-                        VALUES (:id_mes, :data, :classificacao, :descricao, :debito_compra_credito, :valor);
-                    """)
-
-                    # Executar a query com os parâmetros passados
-                    session.execute(query, {
-                        "id_mes": debito_mes_ref,
-                        "data": debito_data,
-                        "classificacao": debito_classificacao,
-                        "descricao": debito_descricao,
-                        "debito_compra_credito": debito_compracredito,
-                        "valor": debito_valor
-                    })
-
-                    # Confirmar as alterações
-                    session.commit()
-
-                    st.success("Débito adicionado com sucesso!")
-                except Exception as e:
-                    st.error(f"Erro ao adicionar débito: {e}")
-                    session.rollback()  # Em caso de erro, faz rollback da transação
+ 
 
                 # Adiciona o novo débito à lista de débitos
                 novo_debito = [debito_mes_ref, debito_data, debito_classificacao, debito_descricao, debito_compracredito, debito_valor]
                 novos_debitos.append(novo_debito)
 
+                novos_debitos_df = pd.DataFrame(novos_debitos, columns=["id_mes", "data", "classificacao", "descricao", "debito_compra_credito", "valor"])
+                debito_concatenado = pd.concat([debito, novos_debitos_df], ignore_index=True)
+                
+                conn.update(spreadsheet= url_debito, data=debito_concatenado)
+
+    with st.expander('Crédito'):
+
+        st.title('Crédito')
+
+        credito_parcelas =  st.number_input('Inserir Parcelas', value=1)
+        meses_disponiveis = ['01_2024', '02_2024', '03_2024', '04_2024', '05_2024', '06_2024', '07_2024', '08_2024','09_2024','10_2024','11_2024','12_2024']
+        credito_mes_parcela1 = st.selectbox('Selecione o mês inicial',  meses_disponiveis) 
+        credito_valor = st.text_input('Insirir Valor Crédito', key = 'insirir-valor-credito')
+        credito_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-credito')
+        credito_classificacao = st.selectbox('Selecione o tipo:', ['Faturas 2023','Presente Pitica','Presentes - Família','Lazer','Roupas','Compras Minhas','Outros'], key='class-credito')
+        credito_cartao = st.selectbox('Selecione o cartão:', ['Inter','Nubank','C6','Renner'], key='cartao-credito')
 
 
+        if credito_valor == "":
+            credito_valor = 100.0
+        else:
+            credito_valor = credito_valor
+
+        credito_valor = float(credito_valor)
+
+        valor_parcela = round(credito_valor / credito_parcelas, 2)
+
+
+
+        novos_creditos = []  # Inicializa a lista antes de usá-la
+
+        # Exibir formulário no Streamlit
+        with st.form('form credito'):
+            if st.form_submit_button('Adicionar Gasto Crédito'):
+                # Criação das parcelas dentro do formulário
+                mes_inicial = datetime.strptime(credito_mes_parcela1, "%m_%Y")
+                for i in range(int(credito_parcelas)):
+                    id_mes = mes_inicial.strftime("%m_%Y")
+                    novo_credito = [id_mes, credito_cartao, credito_descrição, credito_classificacao, valor_parcela]
+                    novos_creditos.append(novo_credito)
+
+
+                    # Avançar para o próximo mês
+                    mes_inicial += relativedelta(months=1)
+                novos_creditos_df = pd.DataFrame(novos_creditos, columns=['id_mes', 'credito_cartao','descricao','classificacao','valor' ])
+
+                credito_concatenado = pd.concat([credito,novos_creditos_df], ignore_index=True)
+                conn.update(spreadsheet= url_credito, data=credito_concatenado)
+            
+    with st.expander("Receita"): 
+        st.title("Receita")
+        novos_receitas = []
+        with st.form('form receita'):
+            receita_data = st.text_input('Insirir Data',key = 'insirir-data-receita ')
+            receita_id_mes = st.selectbox('Selecione o mês referência:', ['01_2024','02_2024','03_2024','04_2024','05_2024','06_2024','07_2024','08_2024','09_2024','10_2024','11_2024','12_2024'], key='class-mesref_receita')
+            if receita_data  == "":
+                receita_data = "08/02/2000"
+            else:
+                receita_data = receita_data    
+
+            
+            receita_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-receita')
+            receita_classificacao = st.selectbox('Selecione o tipo:', ['Salário','Bônus','13º','Cartola','Apostas','Investimentos','Outros'], key='class-receita')
+
+            receita_valor = st.text_input('Insirir Valor', key = 'insirir-valor-receita')
+
+            if receita_valor == "":
+                receita_valor = 1.0
+            else:
+                receita_valor = receita_valor
+
+            receita_valor = float(receita_valor)
+
+        
+
+            submit_button = st.form_submit_button("Adicionar Receita")
+
+            if submit_button:
+                novo_receita = [receita_id_mes, receita_data,  receita_classificacao, receita_descrição, receita_valor]
+                novos_receitas.append(novo_receita)
+                novos_receitas_df = pd.DataFrame(novos_receitas, columns=['id_mes', 'data','classificacao','descricao','valor'])
+
+
+
+                receita_concatenado = pd.concat([receita, novos_receitas_df], ignore_index=True)
+                
+                conn.update(spreadsheet= url_receitas, data=receita_concatenado)
+        
+    with st.expander('Fixos'):
+        st.title('Fixos')
+        novos_fixos = []
+        with st.form('form fixo'):
+            fixos_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2024','02_2024','03_2024','04_2024','05_2024',
+                                                                            '06_2024','07_2024','08_2024','09_2024','10_2024',
+                                                                            '11_2024','12_2024'], key='class-mesref_fixos')
+            
+            fixos_data = st.text_input('Insirir Data', key = "inserir-data-fixos")
+            fixos_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-fixos")
+
+            fixos_classificacao = st.selectbox('Selecione o tipo:', ['Casa', 'Fiel Torcedor', 'Cabelo', 'Internet Celular', 'Spotify','Passagem', 'Seguro Celular','Streaming','Tembici - Itaú',], key='class-fixos')
+            fixos_valor = st.text_input('Insirir Valor', key = "inserir-valor-fixos")
+
+            if fixos_valor == "":
+                fixos_valor = 1.0
+            else:
+                fixos_valor = fixos_valor
+
+            fixos_valor = float(fixos_valor)
+
+            if fixos_data  == "":
+                fixos_data = "08/02/2000"
+            else:
+                fixos_data = fixos_data    
+
+            fixos_algumcredito =  st.selectbox('Gasto em algum crédito?:', ['', 'Nubank','Inter' ], key='class-algumcredito_fixos')
+
+
+            submit_button = st.form_submit_button("Adicionar Fixo")
+
+            if submit_button:
+                novo_fixo= [fixos_mes_ref, fixos_data,fixos_classificacao, fixos_valor , fixos_descrição ,fixos_algumcredito]
+                novos_fixos.append(novo_fixo)
+                novos_fixos_df = pd.DataFrame(novos_fixos, columns=['id_mes', 'data','classificacao','valor','descricao','fixo_compra_credito'])
+
+                fixo_concatenado = pd.concat([fixo, novos_fixos_df], ignore_index=True)
+                
+                conn.update(spreadsheet= url_extrato_fixos, data=fixo_concatenado)
+
+    with st.expander('Investimentos'):
+        st.title('Investimentos')
+
+        novos_investimentos = []
+        with st.form('form investimentos'):
+
+            investimentos_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2024','02_2024','03_2024','04_2024','05_2024',
+                                                                            '06_2024','07_2024','08_2024','09_2024','10_2024',
+                                                                            '11_2024','12_2024'], key='class-mesref_investimentos')
+            
+            investimentos_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-investimentos")
+            investimentos_tipo =  st.text_input('Insirir Tipo Investimentos', key = "inserir-tipo-investimentos")
+            investimentos_data = st.text_input('Insirir Data', key = "inserir-data-investimentos")
+            investimentos_valor = st.text_input('Insirir Valor', key = "inserir-valor-investimentos")
+
+            if investimentos_valor == "":
+                investimentos_valor = 1.0
+            else:
+                investimentos_valor = investimentos_valor
+
+            investimentos_valor = float(investimentos_valor)
+
+            if investimentos_data  == "":
+                investimentos_data = "08/02/2000"
+            else:
+                investimentos_data = investimentos_data  
+
+            
+            submit_button = st.form_submit_button("Adicionar Fixo")
+
+            if submit_button:
+                novos_investimento= [investimentos_mes_ref, investimentos_descrição,investimentos_tipo, investimentos_data, investimentos_valor]
+                novos_investimentos.append(novos_investimento)
+                novos_investimentos_df = pd.DataFrame(novos_investimentos, columns=['id_mes', 'descricao','investimento_tipo','data','valor'])
+
+                investimentos_concatenados = pd.concat([investimento, novos_investimentos_df], ignore_index=True)
+                
+                conn.update(spreadsheet= url_investimento, data=investimentos_concatenados)
+
+
+    with st.expander('Empréstimos'):
+        st.title('Empréstimos')
+        novos_emprestimos = []
+        with st.form('form emprestimos'):
+            emprestimos_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2024','02_2024','03_2024','04_2024','05_2024',
+                                                                            '06_2024','07_2024','08_2024','09_2024','10_2024',
+                                                                            '11_2024','12_2024'], key='class-mesref_emprestimos')
+            
+            emprestimos_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-emprestimos")
+            emprestimos_destinatario =  st.text_input('Insirir Destinatário', key = "inserir-destinatario-emprestimos")
+
+            emprestimos_data = st.text_input('Insirir Data', key = "inserir-data-emprestimos")
+            emprestimos_valor = st.text_input('Insirir Valor', key = "inserir-valor-emprestimos")
+
+            if emprestimos_valor == "":
+                emprestimos_valor = 1.0
+            else:
+                emprestimos_valor = emprestimos_valor
+
+            emprestimos_valor = float(emprestimos_valor)
+
+            if emprestimos_data  == "":
+                emprestimos_data = "08/02/2000"
+            else:
+                emprestimos_data = emprestimos_data
+
+
+            submit_button = st.form_submit_button("Adicionar Fixo")
+
+            if submit_button:
+                novo_emprestimo= [emprestimos_mes_ref, emprestimos_descrição,emprestimos_destinatario, emprestimos_data, emprestimos_valor]
+                novos_emprestimos.append(novo_emprestimo)
+                novos_emprestimos_df = pd.DataFrame(novos_emprestimos, columns=['id_mes', 'descricao','emprestimo_destinatario','data','valor'])
+
+                emprestimos_concatenados = pd.concat([emprestimo, novos_emprestimos_df], ignore_index=True)
+                
+                conn.update(spreadsheet= url_emprestimos, data=emprestimos_concatenados)
+                
+
+        
+
+    with st.expander('VR'):
+            st.title('VR')
+            novos_vrs = []
+            with st.form('form vr'):
+                #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
+
+                #a partir do calculo de data conseguimos ter o mes e jogamos lá
+                vr_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2024','02_2024','03_2024','04_2024','05_2024',
+                                                                                '06_2024','07_2024','08_2024','09_2024','10_2024',
+                                                                                '11_2024','12_2024'], key='class-mesref_vr')
+                vr_data = st.text_input('Insirir Data',key = 'insirir-data-vr')
+                vr_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-vr')
+                vr_local =  st.text_input('Insirir Local', key = 'insirir-local-vr')
+                vr_classificacao = st.selectbox('Selecione o tipo:', ['Almoço no escritório','Saídas','Saídas - Pitica','Rua','Casa','Outros'], key='class-vr')
+                vr_valor = st.text_input('Insirir Valor', key = 'insirir-valor-vr')
+
+                if vr_valor == "":
+                    vr_valor = 1.0
+                else:
+                    vr_valor = vr_valor
+
+                vr_valor = float(vr_valor)
+
+                if vr_data  == "":
+                    vr_data = "08/02/2000"
+                else:
+                    vr_data = vr_data    
+
+
+
+                submit_button = st.form_submit_button("Adicionar VR")
+
+                if submit_button:
+                    novo_vr = [ vr_data, vr_mes_ref, vr_descrição,vr_local,  vr_classificacao, vr_valor]
+                    novos_vrs.append(novo_vr)
+                    novos_vrs_df = pd.DataFrame(novos_vrs, columns=['data', 'id_mes', 'descricao','local','classificacao','valor'])
+
+                    vr_concatenado = pd.concat([vr, novos_vrs_df], ignore_index=True)
+                    
+                    conn.update(spreadsheet= url_extrato_vr, data=vr_concatenado)
+
+
+
+  
 with tab2:
 
     # pegando base de orcamento do excel e pegando o real gasto, além disso é feito alguns tratamentos
