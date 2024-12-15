@@ -1,20 +1,11 @@
 import streamlit as st
 import pandas as pd
-import os
-from dotenv import load_dotenv
-from openpyxl import load_workbook
 import gspread
-from google.auth import exceptions
-from google.auth.transport.requests import Request
-from google.oauth2.service_account import Credentials
 from datetime import datetime, date
-import json
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import psycopg2
-from dateutil.relativedelta import relativedelta
 from oauth2client.service_account import ServiceAccountCredentials
 from streamlit_gsheets import GSheetsConnection
 
