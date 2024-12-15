@@ -5,4 +5,4 @@ datetime
 numpy
 plotly
 oauth2client
-streamlit_gsheets
+#streamlit_gsheets
