@@ -36,15 +36,15 @@ url_patriomonio = st.secrets["connections"]["gsheets"]["url_patrimonio"]
 
 
 
-debito = conn.read(spreadsheet= url_debito)
-credito = conn.read(spreadsheet= url_credito)
-receita = conn.read(spreadsheet= url_receitas)
-fixo = conn.read(spreadsheet= url_extrato_fixos)
-investimento = conn.read(spreadsheet= url_investimento)
-emprestimo = conn.read(spreadsheet= url_emprestimos)
-vr = conn.read(spreadsheet= url_extrato_vr)
-patrimonio = conn.read(spreadsheet= url_patriomonio)
-orcamento = conn.read(spreadsheet= url_orcamento)
+debito = conn.read(spreadsheet= url_debito,ttl=60)
+credito = conn.read(spreadsheet= url_credito,ttl=60)
+receita = conn.read(spreadsheet= url_receitas,ttl=60)
+fixo = conn.read(spreadsheet= url_extrato_fixos,ttl=60)
+investimento = conn.read(spreadsheet= url_investimento,ttl=60)
+emprestimo = conn.read(spreadsheet= url_emprestimos,ttl=60)
+vr = conn.read(spreadsheet= url_extrato_vr,ttl=60)
+patrimonio = conn.read(spreadsheet= url_patriomonio,ttl=60)
+orcamento = conn.read(spreadsheet= url_orcamento,ttl=60)
 
 
 tab1, tab2 = st.tabs(['Adicionar dados','Visualização'])
