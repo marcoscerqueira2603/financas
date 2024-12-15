@@ -32,17 +32,19 @@ url_extrato_fixos =  st.secrets["connections"]["gsheets"]["url_extrato_fixos"]
 url_orcamento =  st.secrets["connections"]["gsheets"]["url_orcamento"]
 url_investimento = st.secrets["connections"]["gsheets"]["url_investimento"]
 url_emprestimos = st.secrets["connections"]["gsheets"]["url_emprestimos"]
+url_patriomonio = st.secrets["connections"]["gsheets"]["url_patrimonio"]
 
 
 
-
-debito = conn.read(spreadsheet= url_debito, ttl=60)
-credito = conn.read(spreadsheet= url_credito, ttl=60)
-receita = conn.read(spreadsheet= url_receitas,ttl=60)
-fixo = conn.read(spreadsheet= url_extrato_fixos,ttl=60)
-investimento = conn.read(spreadsheet= url_investimento,ttl=60)
-emprestimo = conn.read(spreadsheet= url_emprestimos,ttl=60)
-vr = conn.read(spreadsheet= url_extrato_vr,ttl=60)
+debito = conn.read(spreadsheet= url_debito)
+credito = conn.read(spreadsheet= url_credito)
+receita = conn.read(spreadsheet= url_receitas)
+fixo = conn.read(spreadsheet= url_extrato_fixos)
+investimento = conn.read(spreadsheet= url_investimento)
+emprestimo = conn.read(spreadsheet= url_emprestimos)
+vr = conn.read(spreadsheet= url_extrato_vr)
+patrimonio = conn.read(spreadsheet= url_patriomonio)
+orcamento = conn.read(spreadsheet= url_orcamento)
 
 
 tab1, tab2 = st.tabs(['Adicionar dados','Visualização'])
@@ -348,8 +350,23 @@ with tab1:
   
 with tab2:
 
+    #agrupando planilhas de gastos mensais
+    fixo_agrupado = fixo.groupby(['id_mes', 'classificacao'])['valor'].sum().reset_index()
+    debito_agrupado = debito.groupby(['id_mes'])['valor'].sum().reset_index()
+    debito_agrupado['classificacao'] = 'Débito'
+    credito_agrupado = credito.groupby(['id_mes', 'classificacao'])['valor'].sum().reset_index()
+    receita_agrupado = receita.groupby(['id_mes', 'classificacao'])['valor'].sum().reset_index()
+    patrimonio_agrupado = patrimonio.groupby(['id_mes', 'classificacao'])['valor'].sum().reset_index()
+    resultado_mensal_agrupado =  pd.concat([fixo_agrupado,debito_agrupado, credito_agrupado, receita_agrupado, patrimonio_agrupado])
+
+
+
+
+
+    
     # pegando base de orcamento do excel e pegando o real gasto, além disso é feito alguns tratamentos
-    orcamento_mensal_gastos = consultar_db("select * from financas.orcamento_mes")
+    orcamento_mensal = orcamento
+    orcamento_mensal_gastos = resultado_mensal_agrupado
     orcamento_mensal['id_class'] = orcamento_mensal['id_mes'] + orcamento_mensal['classificacao_orcamento']
     orcamento_mensal_gastos['id_class'] = orcamento_mensal_gastos['id_mes'] + orcamento_mensal_gastos['classificacao']
     orcamento_unificado = pd.merge(orcamento_mensal, orcamento_mensal_gastos, on='id_class', how='outer')
@@ -405,7 +422,7 @@ with tab2:
 
         #criação do segundo gráfico
         #consultando no bd a base
-        debito_agrupado_class =  consultar_db("SELECT id_mes, classificacao, SUM(valor) AS valor FROM financas.debito GROUP BY id_mes, classificacao ORDER BY id_mes, classificacao")
+        debito_agrupado_class =  debito.groupby(['id_mes','classificacao'])['valor'].sum().reset_index()
         
         cores = ["#fce7d2","#ffefa9","#f58f9a","#c0a1ae", "#bfd4ad","#000018","#578bc6"]
 
@@ -431,7 +448,7 @@ with tab2:
         #além disso se o valor for clicado aparece um metric com o gasto médio e filtro de classificação caso seja do interesse ter uma visão de gasto por classificação
         if radio_graf_debito_class == 'valor':
             debito_agrupado_class = debito_agrupado_class[debito_agrupado_class['id_mes'] != 'Total']
-            meses_totais = consultar_db("SELECT COUNT(DISTINCT id_mes) AS total_id_mes FROM financas.debito")
+            meses_totais =  debito['id_mes'].nunique()
             meses_totais = meses_totais['total_id_mes'].iloc[0]
 
             debito_agrupado_class_unico = debito_agrupado_class['classificacao'].unique()
@@ -482,12 +499,13 @@ with tab2:
         st.title('Base Débito')
 
         with st.popover('Filtros'):
-            debito_bd = consultar_db("select * from financas.debito") 
-            filtro_id_mes = st.multiselect('Selecione o mês',debito_bd['id_mes'].unique(),list(debito_bd['id_mes'].unique()))
-            debito_filtrado = debito[debito_bd['id_mes'].isin(filtro_id_mes)]
+            filtro_id_mes = st.multiselect('Selecione o mês',debito['id_mes'].unique(),list(debito['id_mes'].unique()))
+            debito_filtrado = debito[debito['id_mes'].isin(filtro_id_mes)]
             filtro_class = st.multiselect('Selecione a classificação',debito_filtrado['classificacao'].unique(),list(debito_filtrado['classificacao'].unique()))
             debito_filtrado = debito_filtrado[debito_filtrado['classificacao'].isin(filtro_class)]
         debito_filtrado
+
+
 
      
     
