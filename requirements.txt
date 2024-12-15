@@ -1,7 +1,5 @@
 streamlit
 pandas
-python-dotenv
-openpyxl
 gspread
 google-auth
 google-auth-httplib2
@@ -9,7 +7,5 @@ google-auth-oauthlib
 datetime
 numpy
 plotly
-psycopg2
-python-dateutil
 oauth2client
 streamlit-gsheets
