@@ -7,6 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from streamlit_gsheets import GSheetsConnection
+from dateutil.relativedelta import relativedelta
 
 
 st.set_page_config(
@@ -36,15 +37,15 @@ url_patriomonio = st.secrets["connections"]["gsheets"]["url_patrimonio"]
 
 
 
-debito = conn.read(spreadsheet= url_debito,ttl=60)
-credito = conn.read(spreadsheet= url_credito,ttl=60)
-receita = conn.read(spreadsheet= url_receitas,ttl=60)
-fixo = conn.read(spreadsheet= url_extrato_fixos,ttl=60)
-investimento = conn.read(spreadsheet= url_investimento,ttl=60)
-emprestimo = conn.read(spreadsheet= url_emprestimos,ttl=60)
-vr = conn.read(spreadsheet= url_extrato_vr,ttl=60)
-patrimonio = conn.read(spreadsheet= url_patriomonio,ttl=60)
-orcamento = conn.read(spreadsheet= url_orcamento,ttl=60)
+debito = conn.read(spreadsheet= url_debito)
+credito = conn.read(spreadsheet= url_credito)
+receita = conn.read(spreadsheet= url_receitas)
+fixo = conn.read(spreadsheet= url_extrato_fixos)
+investimento = conn.read(spreadsheet= url_investimento)
+emprestimo = conn.read(spreadsheet= url_emprestimos)
+vr = conn.read(spreadsheet= url_extrato_vr)
+patrimonio = conn.read(spreadsheet= url_patriomonio)
+orcamento = conn.read(spreadsheet= url_orcamento)
 
 
 tab1, tab2 = st.tabs(['Adicionar dados','Visualização'])
@@ -354,7 +355,8 @@ with tab2:
     fixo_agrupado = fixo.groupby(['id_mes', 'classificacao'])['valor'].sum().reset_index()
     debito_agrupado = debito.groupby(['id_mes'])['valor'].sum().reset_index()
     debito_agrupado['classificacao'] = 'Débito'
-    credito_agrupado = credito.groupby(['id_mes', 'classificacao'])['valor'].sum().reset_index()
+    credito_agrupado = credito.groupby(['id_mes'])['valor'].sum().reset_index()
+    credito_agrupado['classificacao'] = "Crédito"
     receita_agrupado = receita.groupby(['id_mes', 'classificacao'])['valor'].sum().reset_index()
     patrimonio_agrupado = patrimonio.groupby(['id_mes', 'classificacao'])['valor'].sum().reset_index()
     resultado_mensal_agrupado =  pd.concat([fixo_agrupado,debito_agrupado, credito_agrupado, receita_agrupado, patrimonio_agrupado])
@@ -449,7 +451,7 @@ with tab2:
         if radio_graf_debito_class == 'valor':
             debito_agrupado_class = debito_agrupado_class[debito_agrupado_class['id_mes'] != 'Total']
             meses_totais =  debito['id_mes'].nunique()
-            meses_totais = meses_totais['total_id_mes'].iloc[0]
+
 
             debito_agrupado_class_unico = debito_agrupado_class['classificacao'].unique()
             selected_classes = st.multiselect('Filtre as classificações:',debito_agrupado_class_unico, list(debito_agrupado_class_unico))
@@ -505,7 +507,119 @@ with tab2:
             debito_filtrado = debito_filtrado[debito_filtrado['classificacao'].isin(filtro_class)]
         debito_filtrado
 
+    with st.expander('Status Crédito'):
+        #criacao dos mestricos
+        
+        credito_orcamento =  orcamento_unificado[orcamento_unificado['classificacao'] == 'Crédito']
+        
+        credito_saldo_ano = credito_orcamento['Saldo'].sum()
+        st.metric(label="Saldo anual", value=f"{round(credito_saldo_ano,2)}") 
+
+        tipo_grafico = st.radio("Escolha a visualização", ['Saldo','valor'],key ="grafico_credito")
+
+        
+        graf_credito_mes = px.bar(
+            credito_orcamento,
+            x= 'id_mes_y',
+            y =tipo_grafico,
+            text = tipo_grafico,
+            template =template_dash,
+            color_discrete_sequence = ["#c1e0e0"]
+        )
+        graf_credito_mes.update_layout(
+            showlegend=False,
+            xaxis_title='Mês',
+            yaxis_title='Saldo',
+            plot_bgcolor =bg_color_dash,
+            title={
+                'text': f"<b> # GASTO MENSAL CRÉDITO {tipo_grafico} <b>",
+                'y': 0.9,
+                'x': 0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'}
+        )
+
+        graf_credito_mes.update_yaxes(visible=False,showticklabels=False)
+        st.plotly_chart(graf_credito_mes, use_container_width=True)
 
 
-     
-    
+        #criação do segundo gráfico
+        
+        credito_agrupado_class =  credito.groupby(['id_mes','classificacao'])['valor'].sum().reset_index()
+        
+        cores = ["#fce7d2","#ffefa9","#f58f9a","#c0a1ae", "#bfd4ad","#000018","#578bc6"]
+
+        #transformando o valor em float ao invés de decimal
+              
+        credito_agrupado_class['valor'] = credito_agrupado_class['valor'].astype(float)
+        
+        #criando id_mes "total"
+        total_credito = credito_agrupado_class.groupby('classificacao')['valor'].sum().reset_index()
+        total_credito['id_mes'] = 'Total'
+        total_credito['Percentual'] = (total_credito['valor'] / total_credito['valor'].sum()) * 100
+        credito_agrupado_class = pd.concat([credito_agrupado_class, total_credito], ignore_index=True)
+        
+        #criando coluna de gastos percentuais
+        credito_agrupado_class['Percentual'] = (credito_agrupado_class['valor'] / credito_agrupado_class.groupby('id_mes')['valor'].transform('sum')) * 100
+        credito_agrupado_class['Percentual'] = credito_agrupado_class['Percentual'].round(2)
+
+        radio_graf_credito_class = st.radio("Escolha a visualização", ['Percentual','valor'], key='radio_grafico_class_credito')
+
+        #se o radio for igual a valor o "total" não aparece porque desconsidguraa
+        #além disso se o valor for clicado aparece um metric com o gasto médio e filtro de classificação caso seja do interesse ter uma visão de gasto por classificação
+        if radio_graf_credito_class == 'valor':
+            credito_agrupado_class = credito_agrupado_class[credito_agrupado_class['id_mes'] != 'Total']
+            meses_totais =  credito['id_mes'].nunique()
+
+
+            credito_agrupado_class_unico = credito_agrupado_class['classificacao'].unique()
+            selected_classes = st.multiselect('Filtre as classificações:',credito_agrupado_class_unico, list(credito_agrupado_class_unico))
+            credito_agrupado_class = credito_agrupado_class[credito_agrupado_class['classificacao'].isin(selected_classes)]
+            credito_agrupado_class_media = round(credito_agrupado_class['valor'].sum()/meses_totais,2)
+            
+            st.metric(label="Média mensal", value=f"{round(credito_agrupado_class_media,2)}") 
+            
+        else:
+            #se o radio for percentual apenas mostra o gráfico
+            credito_agrupado_class = credito_agrupado_class
+
+        ordem_classificacao_credito = ['Presente Pitica', 'Roupas', 'Compras Minhas', 'Outros','Presentes - Família','Juros/Anuidade','Faturas 2023']  # Exemplo de ordem que você pode ajustar
+        credito_agrupado_class['classificacao'] = pd.Categorical(credito_agrupado_class['classificacao'], categories=ordem_classificacao_credito, ordered=True)
+        credito_agrupado_class = credito_agrupado_class.sort_values(by=['id_mes', 'classificacao'])
+        
+        graf_credito_class = px.bar(
+            credito_agrupado_class,
+            x= 'id_mes',
+            y =radio_graf_credito_class,
+            text = radio_graf_credito_class,
+            color='classificacao',
+            template =template_dash,
+            color_discrete_sequence = cores,
+                category_orders={
+                    'id_mes': credito_agrupado_class['id_mes'].unique(),
+                    'classificacao': ordem_classificacao_credito }
+        )
+
+        graf_credito_class.update_layout(
+            xaxis_title='Mês',
+            yaxis_title='valor',
+            plot_bgcolor =bg_color_dash,
+            title={
+                'text': f"<b> # GASTO CRÉDITO POR TIPO - {radio_graf_credito_class} <b>",
+                'y': 0.9,
+                'x': 0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'},
+        )
+
+        graf_credito_class.update_yaxes(visible=False,showticklabels=False)
+        st.plotly_chart(graf_credito_class, use_container_width=True)
+
+        st.title('Base Crédito')
+
+        with st.popover('Filtros'):
+            filtro_id_mes_credito = st.multiselect('Selecione o mês',credito['id_mes'].unique(),list(credito['id_mes'].unique()))
+            credito_filtrado = credito[credito['id_mes'].isin(filtro_id_mes_credito)]
+            filtro_class_credito = st.multiselect('Selecione a classificação',credito_filtrado['classificacao'].unique(),list(credito_filtrado['classificacao'].unique()))
+            credito_filtrado = credito_filtrado[credito_filtrado['classificacao'].isin(filtro_class_credito)]
+        credito_filtrado
