@@ -379,6 +379,106 @@ with tab2:
     orcamento_unificado['valor_orcamento'].astype(float) - orcamento_unificado['valor'])
     orcamento_unificado['Saldo'] = round(orcamento_unificado['Saldo'],2) 
 
+    with st.expander('Status Mês atual'):
+
+
+        # Valores de exemplo (você pode substituir pelos valores calculados)
+        dre_data = {
+            "Receita Bruta de Vendas": 100000,
+            "(-) Deduções da Receita Bruta": -10000,
+            "= Receita Líquida de Vendas": 90000,
+            "(-) Custo das Mercadorias Vendidas (CMV)": -40000,
+            "= Lucro Bruto": 50000,
+            "(-) Despesas Operacionais": -20000,
+            "    - Despesas Comerciais": -10000,
+            "    - Despesas Administrativas": -10000,
+            "= Resultado Operacional": 30000,
+            "(+/-) Resultado Financeiro": 2000,
+            "= Resultado Antes do IR": 32000,
+            "(-) Impostos (IRPJ/CSLL)": -8000,
+            "= Lucro Líquido do Exercício": 24000,
+        }
+
+        # HTML e CSS personalizados para tema escuro
+        html_template = """
+        <style>
+            .dre-container {{
+                max-height: 600px;
+                overflow-y: auto;
+                border: 1px solid #444;
+                padding: 10px;
+                background-color: #1e1e1e; /* Fundo neutro para tema escuro */
+                color: #f5f5f5; /* Texto claro */
+            }}
+            .dre-table {{
+                font-family: Arial, sans-serif;
+                width: 100%;
+                border-collapse: collapse;
+            }}
+            .dre-table th, .dre-table td {{
+                text-align: left;
+                padding: 10px;
+                border: 1px solid #444;
+            }}
+            .dre-table th {{
+                background-color: #333;
+                color: #f5f5f5;
+                font-size: 1.1rem;
+            }}
+            .dre-highlight {{
+                font-weight: bold;
+                background-color: #292929;
+                color: #f5f5f5;
+            }}
+            .dre-indent {{
+                padding-left: 20px;
+            }}
+        </style>
+
+        <div class="dre-container">
+            <table class="dre-table">
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Valor (R$)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows}
+                </tbody>
+            </table>
+        </div>
+        """
+
+        # Gerar linhas da tabela dinamicamente
+        rows = ""
+        for descricao, valor in dre_data.items():
+            if descricao.startswith("="):  # Destacar totais
+                rows += f"""
+                <tr class="dre-highlight">
+                    <td>{descricao}</td>
+                    <td>{valor:,.2f}</td>
+                </tr>
+                """
+            elif descricao.startswith("    "):  # Recuar subtotais
+                rows += f"""
+                <tr>
+                    <td class="dre-indent">{descricao.strip()}</td>
+                    <td>{valor:,.2f}</td>
+                </tr>
+                """
+            else:  # Linhas normais
+                rows += f"""
+                <tr>
+                    <td>{descricao}</td>
+                    <td>{valor:,.2f}</td>
+                </tr>
+                """
+
+        # Renderizar o HTML no Streamlit
+        st.html(html_template.format(rows=rows))
+
+
     with st.expander('Status Débito'):
         #criacao dos mestricos
         debito_orcamento =  orcamento_unificado[orcamento_unificado['classificacao'] == 'Débito']
@@ -623,3 +723,9 @@ with tab2:
             filtro_class_credito = st.multiselect('Selecione a classificação',credito_filtrado['classificacao'].unique(),list(credito_filtrado['classificacao'].unique()))
             credito_filtrado = credito_filtrado[credito_filtrado['classificacao'].isin(filtro_class_credito)]
         credito_filtrado
+
+
+    with st.expander('Patrimônio'):
+        emprestimo
+    with st.expander('VR'):
+        vr
