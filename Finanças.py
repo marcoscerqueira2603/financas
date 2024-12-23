@@ -158,7 +158,7 @@ with tab1:
 
             
             receita_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-receita')
-            receita_classificacao = st.selectbox('Selecione o tipo:', ['Salário','Bônus','13º','Cartola','Apostas','Investimentos','Outros'], key='class-receita')
+            receita_classificacao = st.selectbox('Selecione o tipo:', ['Salário','Bônus','13º','Adiantamento Férias','1/3 Férias','Cartola','Apostas','Investimentos','Outros'], key='class-receita')
 
             receita_valor = st.text_input('Insirir Valor', key = 'insirir-valor-receita')
 
@@ -356,6 +356,7 @@ with tab2:
     debito_agrupado = debito.groupby(['id_mes'])['valor'].sum().reset_index()
     debito_agrupado['classificacao'] = 'Débito'
     credito_agrupado = credito.groupby(['id_mes'])['valor'].sum().reset_index()
+    credito_agrupado_cartao = credito.groupby(['id_mes','credito_cartao'])['valor'].sum().reset_index()
     credito_agrupado['classificacao'] = "Crédito"
     receita_agrupado = receita.groupby(['id_mes', 'classificacao'])['valor'].sum().reset_index()
     patrimonio_agrupado = patrimonio.groupby(['id_mes', 'classificacao'])['valor'].sum().reset_index()
@@ -374,32 +375,141 @@ with tab2:
     orcamento_unificado = pd.merge(orcamento_mensal, orcamento_mensal_gastos, on='id_class', how='outer')
     orcamento_unificado['valor'] = orcamento_unificado['valor'].astype(float) 
     orcamento_unificado['Saldo'] = np.where(
-    orcamento_unificado['classificacao'].isin(['Renda', 'Juntar']),
-    orcamento_unificado['valor'] - orcamento_unificado['valor_orcamento'].astype(float),
-    orcamento_unificado['valor_orcamento'].astype(float) - orcamento_unificado['valor'])
+            orcamento_unificado['classificacao'].isin(['Renda', 'Juntar']),
+            orcamento_unificado['valor'] - orcamento_unificado['valor_orcamento'].astype(float),
+            orcamento_unificado['valor_orcamento'].astype(float) - orcamento_unificado['valor'])
     orcamento_unificado['Saldo'] = round(orcamento_unificado['Saldo'],2) 
 
     with st.expander('Status Mês atual'):
+        meses = orcamento_unificado['id_mes_y'].unique().tolist()
+        selecione_mes = st.multiselect('Filtre o mês:', meses, default=[meses[-1]])
+        
 
 
-        # Valores de exemplo (você pode substituir pelos valores calculados)
+        tipo_receita = receita_agrupado['classificacao'].unique().tolist()
+        receitas_orcado =  orcamento_mensal[orcamento_mensal['classificacao_orcamento'].isin(tipo_receita)]
+        receitas_orcado.rename(columns={'classificacao_orcamento': 'classificacao'}, inplace=True)
+        receitas_real = receita_agrupado
+        receitas_real['id_class'] = receitas_real['id_mes'] + receitas_real['classificacao']
+
+        visualizacao_renda = st.radio("Escolha a visualização de renda", ['Apenas salário','Todos'])
+
+        if visualizacao_renda == "Apenas salário":
+            filtragem_salario = ['Salário','Adiantamento Férias']
+            receitas_real = receitas_real[receitas_real['classificacao'].isin(filtragem_salario)]
+            receitas_orcado = receitas_orcado[receitas_orcado['classificacao'].isin(filtragem_salario)]
+        else:
+            receitas_real =receitas_real
+            receitas_orcado = receitas_orcado
+
+        
+
+        tipo_fixo = fixo_agrupado['classificacao'].unique().tolist()
+        gastos_fixos_orcado = orcamento_mensal[orcamento_mensal['classificacao_orcamento'].isin(tipo_fixo)]
+        gastos_fixos_orcado.rename(columns={'classificacao_orcamento': 'classificacao'}, inplace=True)
+        gastos_fixos_real = fixo_agrupado
+        gastos_fixos_real['id_class'] = gastos_fixos_real['id_mes'] + gastos_fixos_real['classificacao']
+
+
+
+
+        def calcular_diferencas(real_df, orcado_df):
+            df = pd.merge(
+                real_df, orcado_df, on="id_class", how="outer", suffixes=("_real", "_orcado")
+            )
+            df.fillna(0, inplace=True)
+            df["Diferença"] = df["valor"] - df["valor_orcamento"]
+            return df
+
+        def construir_dre_classificacao(df, classificacao_nome):
+            df = df.groupby("classificacao_real").agg({
+                "valor": "sum",
+                "valor_orcamento": "sum"
+            }).reset_index()
+
+            # Calcular a diferença entre 'valor' e 'valor_orcamento'
+            df["diferenca"] = df["valor"] - df["valor_orcamento"]
+            dre_classificacao = {}
+            for _, row in df.iterrows():
+                classificacao = row["classificacao_real"]
+                dre_classificacao[f"    - {classificacao}"] = {
+                    "real": row["valor"],
+                    "orcado": row["valor_orcamento"]
+                }
+            total_real = df["valor"].sum()
+            total_orcado = df["valor_orcamento"].sum()
+            dre_classificacao[f"= Total {classificacao_nome}"] = {
+                "real": total_real,
+                "orcado": total_orcado
+            }
+            return dre_classificacao
+
+        # Calcula diferenças
+        receitas = calcular_diferencas(receitas_real, receitas_orcado)
+        gastos_fixos = calcular_diferencas(gastos_fixos_real, gastos_fixos_orcado)
+        
+        receitas = receitas[receitas['id_mes_real'].isin(selecione_mes)]
+        receitas = receitas[receitas['id_mes_orcado'].isin(selecione_mes)]
+        
+        gastos_fixos = gastos_fixos[gastos_fixos['id_mes_real'].isin(selecione_mes)]
+        gastos_fixos = gastos_fixos[gastos_fixos['id_mes_orcado'].isin(selecione_mes)]
+        
+        debito_total_filtrado = debito_agrupado[debito_agrupado['id_mes'].isin(selecione_mes)]
+        credito_total_filtrado = credito_agrupado[credito_agrupado['id_mes'].isin(selecione_mes)]
+        orcamento_mensal_filtrado = orcamento_mensal[orcamento_mensal['id_mes'].isin(selecione_mes)]
+
+        debito_total = debito_total_filtrado['valor'].sum()
+        orcamento_mensal_debito = orcamento_mensal_filtrado[orcamento_mensal_filtrado['classificacao_orcamento']== "Débito"]
+        debito_orcado = orcamento_mensal_debito['valor_orcamento'].sum()
+
+        
+        credito_total = credito_total_filtrado['valor'].sum()
+        orcamento_mensal_credito = orcamento_mensal_filtrado[orcamento_mensal_filtrado['classificacao_orcamento']== "Crédito"]
+        credito_orcado = orcamento_mensal_credito['valor_orcamento'].sum()
+
+        orcamento_mensal_sobra = orcamento_mensal_filtrado[orcamento_mensal_filtrado['classificacao_orcamento']== "Sobra"]
+        orcamento_sobra = orcamento_mensal_sobra['valor_orcamento'].sum()
+
+
+        # Sobra Final
+        sobra_real = receitas["valor"].sum() - (
+            gastos_fixos["valor"].sum() + credito_total + debito_total
+        )
+        sobra_orcado = orcamento_sobra             
+
+
+         # Monta DRE dinâmico
+
+
+
+        gastos_fixos['valor'] = gastos_fixos['valor'] * -1
+        gastos_fixos['valor_orcamento'] = gastos_fixos['valor_orcamento'] * -1
+        debito_total =debito_total * -1
+        debito_orcado =debito_orcado * -1
+        credito_total = credito_total * -1
+        credito_orcado = credito_orcado  * -1
+
+
+        dre_receitas = construir_dre_classificacao(receitas, "de receitas")
+        dre_gastos_fixos = construir_dre_classificacao(gastos_fixos, "de gastos fixos")
+
+        # Montagem final do DRE
         dre_data = {
-            "Receita Bruta de Vendas": 100000,
-            "(-) Deduções da Receita Bruta": -10000,
-            "= Receita Líquida de Vendas": 90000,
-            "(-) Custo das Mercadorias Vendidas (CMV)": -40000,
-            "= Lucro Bruto": 50000,
-            "(-) Despesas Operacionais": -20000,
-            "    - Despesas Comerciais": -10000,
-            "    - Despesas Administrativas": -10000,
-            "= Resultado Operacional": 30000,
-            "(+/-) Resultado Financeiro": 2000,
-            "= Resultado Antes do IR": 32000,
-            "(-) Impostos (IRPJ/CSLL)": -8000,
-            "= Lucro Líquido do Exercício": 24000,
+            **dre_receitas,
+            **dre_gastos_fixos,
+            "= Total gastos com crédito":{
+                "real": credito_total,
+                "orcado": credito_orcado},
+            "= Total gastos com débito":{
+                "real": debito_total,
+                "orcado": debito_orcado},
+            "= Sobra Final": {
+                "real": sobra_real,
+                "orcado": sobra_orcado,
+            }
         }
 
-        # HTML e CSS personalizados para tema escuro
+        # HTML e CSS personalizados
         html_template = """
         <style>
             .dre-container {{
@@ -407,8 +517,8 @@ with tab2:
                 overflow-y: auto;
                 border: 1px solid #444;
                 padding: 10px;
-                background-color: #1e1e1e; /* Fundo neutro para tema escuro */
-                color: #f5f5f5; /* Texto claro */
+                background-color: #1e1e1e;
+                color: #f5f5f5;
             }}
             .dre-table {{
                 font-family: Arial, sans-serif;
@@ -440,7 +550,9 @@ with tab2:
                 <thead>
                     <tr>
                         <th>Descrição</th>
-                        <th>Valor (R$)</th>
+                        <th>Real (R$)</th>
+                        <th>Orçado (R$)</th>
+                        <th>Diferença (R$)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -452,31 +564,45 @@ with tab2:
 
         # Gerar linhas da tabela dinamicamente
         rows = ""
-        for descricao, valor in dre_data.items():
+        for descricao, valores in dre_data.items():
+            real = valores["real"]
+            orcado = valores["orcado"]
+            diferenca = real  - orcado  
+
             if descricao.startswith("="):  # Destacar totais
                 rows += f"""
                 <tr class="dre-highlight">
                     <td>{descricao}</td>
-                    <td>{valor:,.2f}</td>
+                    <td>{real:,.2f}</td>
+                    <td>{orcado:,.2f}</td>
+                    <td>{diferenca:,.2f}</td>
                 </tr>
                 """
             elif descricao.startswith("    "):  # Recuar subtotais
                 rows += f"""
                 <tr>
                     <td class="dre-indent">{descricao.strip()}</td>
-                    <td>{valor:,.2f}</td>
+                    <td>{real:,.2f}</td>
+                    <td>{orcado:,.2f}</td>
+                    <td>{diferenca:,.2f}</td>
                 </tr>
                 """
             else:  # Linhas normais
                 rows += f"""
                 <tr>
                     <td>{descricao}</td>
-                    <td>{valor:,.2f}</td>
+                    <td>{real:,.2f}</td>
+                    <td>{orcado:,.2f}</td>
+                    <td>{diferenca:,.2f}</td>
                 </tr>
                 """
 
+
+
+
         # Renderizar o HTML no Streamlit
         st.html(html_template.format(rows=rows))
+
 
 
     with st.expander('Status Débito'):
@@ -724,8 +850,3 @@ with tab2:
             credito_filtrado = credito_filtrado[credito_filtrado['classificacao'].isin(filtro_class_credito)]
         credito_filtrado
 
-
-    with st.expander('Patrimônio'):
-        emprestimo
-    with st.expander('VR'):
-        vr
