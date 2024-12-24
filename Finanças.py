@@ -285,7 +285,7 @@ with tab1:
                 investimentos_data = investimentos_data  
 
             
-            submit_button = st.form_submit_button("Adicionar Fixo")
+            submit_button = st.form_submit_button("Adicionar Investimento")
 
             if submit_button:
                 novos_investimento= [investimentos_mes_ref, investimentos_descrição,investimentos_tipo, investimentos_data, investimentos_valor]
