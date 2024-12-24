@@ -37,15 +37,15 @@ url_patriomonio = st.secrets["connections"]["gsheets"]["url_patrimonio"]
 
 
 
-debito = conn.read(spreadsheet= url_debito)
-credito = conn.read(spreadsheet= url_credito)
-receita = conn.read(spreadsheet= url_receitas)
-fixo = conn.read(spreadsheet= url_extrato_fixos)
-investimento = conn.read(spreadsheet= url_investimento)
-emprestimo = conn.read(spreadsheet= url_emprestimos)
-vr = conn.read(spreadsheet= url_extrato_vr)
-patrimonio = conn.read(spreadsheet= url_patriomonio)
-orcamento = conn.read(spreadsheet= url_orcamento)
+debito = conn.read(spreadsheet= url_debito, ttl =120)
+credito = conn.read(spreadsheet= url_credito, ttl =120)
+receita = conn.read(spreadsheet= url_receitas,ttl =120)
+fixo = conn.read(spreadsheet= url_extrato_fixos, ttl =120)
+investimento = conn.read(spreadsheet= url_investimento, ttl =120)
+emprestimo = conn.read(spreadsheet= url_emprestimos, ttl =120)
+vr = conn.read(spreadsheet= url_extrato_vr,ttl =120)
+patrimonio = conn.read(spreadsheet= url_patriomonio, ttl =120)
+orcamento = conn.read(spreadsheet= url_orcamento, ttl =120)
 
 
 
@@ -95,10 +95,10 @@ with tab1:
  
 
                 # Adiciona o novo débito à lista de débitos
-                novo_debito = [debito_mes_ref, debito_data, debito_classificacao, debito_descricao, debito_compracredito, debito_valor]
+                novo_debito = [debito_mes_ref, debito_data, debito_classificacao, debito_descricao, debito_compracredito, debito_valor,2025]
                 novos_debitos.append(novo_debito)
 
-                novos_debitos_df = pd.DataFrame(novos_debitos, columns=["id_mes", "data", "classificacao", "descricao", "debito_compra_credito", "valor"])
+                novos_debitos_df = pd.DataFrame(novos_debitos, columns=["id_mes", "data", "classificacao", "descricao", "debito_compra_credito", "valor",'ano'])
                 debito_concatenado = pd.concat([debito, novos_debitos_df], ignore_index=True)
                 
                 conn.update(spreadsheet= url_debito, data=debito_concatenado)
@@ -137,13 +137,13 @@ with tab1:
                 mes_inicial = datetime.strptime(credito_mes_parcela1, "%m_%Y")
                 for i in range(int(credito_parcelas)):
                     id_mes = mes_inicial.strftime("%m_%Y")
-                    novo_credito = [id_mes, credito_cartao, credito_descrição, credito_classificacao, valor_parcela]
+                    novo_credito = [id_mes, credito_cartao, credito_descrição, credito_classificacao, valor_parcela,2025]
                     novos_creditos.append(novo_credito)
 
 
                     # Avançar para o próximo mês
                     mes_inicial += relativedelta(months=1)
-                novos_creditos_df = pd.DataFrame(novos_creditos, columns=['id_mes', 'credito_cartao','descricao','classificacao','valor' ])
+                novos_creditos_df = pd.DataFrame(novos_creditos, columns=['id_mes', 'credito_cartao','descricao','classificacao','valor','ano' ])
 
                 credito_concatenado = pd.concat([credito,novos_creditos_df], ignore_index=True)
                 conn.update(spreadsheet= url_credito, data=credito_concatenado)
@@ -178,9 +178,9 @@ with tab1:
             submit_button = st.form_submit_button("Adicionar Receita")
 
             if submit_button:
-                novo_receita = [receita_id_mes, receita_data,  receita_classificacao, receita_descrição, receita_valor]
+                novo_receita = [receita_id_mes, receita_data,  receita_classificacao, receita_descrição, receita_valor,2025]
                 novos_receitas.append(novo_receita)
-                novos_receitas_df = pd.DataFrame(novos_receitas, columns=['id_mes', 'data','classificacao','descricao','valor'])
+                novos_receitas_df = pd.DataFrame(novos_receitas, columns=['id_mes', 'data','classificacao','descricao','valor','ano'])
 
 
 
@@ -219,9 +219,9 @@ with tab1:
             submit_button = st.form_submit_button("Adicionar Fixo")
 
             if submit_button:
-                novo_fixo= [fixos_mes_ref, fixos_data,fixos_classificacao, fixos_valor , fixos_descrição ,fixos_algumcredito]
+                novo_fixo= [fixos_mes_ref, fixos_data,fixos_classificacao, fixos_valor , fixos_descrição ,fixos_algumcredito,2025]
                 novos_fixos.append(novo_fixo)
-                novos_fixos_df = pd.DataFrame(novos_fixos, columns=['id_mes', 'data','classificacao','valor','descricao','fixo_compra_credito'])
+                novos_fixos_df = pd.DataFrame(novos_fixos, columns=['id_mes', 'data','classificacao','valor','descricao','fixo_compra_credito','ano'])
 
                 fixo_concatenado = pd.concat([fixo, novos_fixos_df], ignore_index=True)
                 
@@ -249,10 +249,10 @@ with tab1:
             submit_button = st.form_submit_button("Adicionar Patrimônio")
 
             if submit_button:
-                novo_patrimonio= [patrimonio_mes_ref, patrimonio_valor,patrimonio_direcionamento, patrimonio_classificacao , patrimonio_descricao ]
+                novo_patrimonio= [patrimonio_mes_ref, patrimonio_valor,patrimonio_direcionamento, patrimonio_classificacao , patrimonio_descricao,2025]
 
                 novos_patrimonios.append(novo_patrimonio)
-                novos_patrimonios_df = pd.DataFrame(novos_patrimonios, columns=['id_mes', 'valor','direcionamento','classificacao','descricao'])
+                novos_patrimonios_df = pd.DataFrame(novos_patrimonios, columns=['id_mes', 'valor','direcionamento','classificacao','descricao','ano'])
 
                 patrimonio_concatenado = pd.concat([patrimonio, novos_patrimonios_df], ignore_index=True)
                 
@@ -288,9 +288,9 @@ with tab1:
             submit_button = st.form_submit_button("Adicionar Investimento")
 
             if submit_button:
-                novos_investimento= [investimentos_mes_ref, investimentos_descrição,investimentos_tipo, investimentos_data, investimentos_valor]
+                novos_investimento= [investimentos_mes_ref, investimentos_descrição,investimentos_tipo, investimentos_data, investimentos_valor, 2025]
                 novos_investimentos.append(novos_investimento)
-                novos_investimentos_df = pd.DataFrame(novos_investimentos, columns=['id_mes', 'descricao','investimento_tipo','data','valor'])
+                novos_investimentos_df = pd.DataFrame(novos_investimentos, columns=['id_mes', 'descricao','investimento_tipo','data','valor','ano'])
 
                 investimentos_concatenados = pd.concat([investimento, novos_investimentos_df], ignore_index=True)
                 
@@ -326,9 +326,9 @@ with tab1:
             submit_button = st.form_submit_button("Adicionar Fixo")
 
             if submit_button:
-                novo_emprestimo= [emprestimos_mes_ref, emprestimos_descrição,emprestimos_destinatario, emprestimos_data, emprestimos_valor]
+                novo_emprestimo= [emprestimos_mes_ref, emprestimos_descrição,emprestimos_destinatario, emprestimos_data, emprestimos_valor,2025]
                 novos_emprestimos.append(novo_emprestimo)
-                novos_emprestimos_df = pd.DataFrame(novos_emprestimos, columns=['id_mes', 'descricao','emprestimo_destinatario','data','valor'])
+                novos_emprestimos_df = pd.DataFrame(novos_emprestimos, columns=['id_mes', 'descricao','emprestimo_destinatario','data','valor','ano'])
 
                 emprestimos_concatenados = pd.concat([emprestimo, novos_emprestimos_df], ignore_index=True)
                 
@@ -383,6 +383,10 @@ with tab1:
   
 with tab2:
 
+    
+
+
+
     #agrupando planilhas de gastos mensais
     fixo_agrupado = fixo.groupby(['id_mes', 'classificacao'])['valor'].sum().reset_index()
     debito_agrupado = debito.groupby(['id_mes'])['valor'].sum().reset_index()
@@ -414,10 +418,15 @@ with tab2:
 
     with st.expander('Status Mês atual'):
         
+
+        
+        
         meses = orcamento_unificado['id_mes_x'].unique().tolist()
         
         selecione_mes = st.multiselect('Filtre o mês:', meses, default=[meses[-1]])
         
+
+
 
 
         tipo_receita = receita_agrupado['classificacao'].unique().tolist()
@@ -663,7 +672,14 @@ with tab2:
 
     with st.expander('Status Débito'):
         #criacao dos mestricos
+                
+        selecao_ano_debito = st.multiselect('Filtre o ano:', [2024,2025], default=2025, key='ano-debito')
+    
+
         debito_orcamento =  orcamento_unificado[orcamento_unificado['classificacao'] == 'Débito']
+        debito_orcamento =  debito_orcamento[debito_orcamento['ano'].isin(selecao_ano_debito)]
+        
+
         col1, col2, col3 =  st.columns(3)
         with col1:
             debito_saldo_atual  = debito_orcamento['Saldo'].iloc[-1]
@@ -706,7 +722,8 @@ with tab2:
 
         #criação do segundo gráfico
         #consultando no bd a base
-        debito_agrupado_class =  debito.groupby(['id_mes','classificacao'])['valor'].sum().reset_index()
+        debito_ano = debito[debito['ano'].isin(selecao_ano_debito)]
+        debito_agrupado_class =  debito_ano.groupby(['id_mes','classificacao'])['valor'].sum().reset_index()
         
         cores = ["#fce7d2","#ffefa9","#f58f9a","#c0a1ae", "#bfd4ad","#000018","#578bc6"]
 
@@ -783,17 +800,24 @@ with tab2:
         st.title('Base Débito')
 
         with st.popover('Filtros'):
-            filtro_id_mes = st.multiselect('Selecione o mês',debito['id_mes'].unique(),list(debito['id_mes'].unique()))
-            debito_filtrado = debito[debito['id_mes'].isin(filtro_id_mes)]
+            filtro_id_mes = st.multiselect('Selecione o mês',debito_ano['id_mes'].unique(),list(debito_ano['id_mes'].unique()))
+            debito_filtrado = debito_ano[debito_ano['id_mes'].isin(filtro_id_mes)]
             filtro_class = st.multiselect('Selecione a classificação',debito_filtrado['classificacao'].unique(),list(debito_filtrado['classificacao'].unique()))
             debito_filtrado = debito_filtrado[debito_filtrado['classificacao'].isin(filtro_class)]
         debito_filtrado
 
     with st.expander('Status Crédito'):
         #criacao dos mestricos
+                
+        selecao_ano_credito = st.multiselect('Filtre o ano:', [2024,2025], default=2025, key='ano-credito')
+        
+
+
         
         credito_orcamento =  orcamento_unificado[orcamento_unificado['classificacao'] == 'Crédito']
-        
+        credito_orcamento =  credito_orcamento[credito_orcamento['ano'].isin(selecao_ano_credito)]
+
+
         credito_saldo_ano = credito_orcamento['Saldo'].sum()
         st.metric(label="Saldo anual", value=f"{round(credito_saldo_ano,2)}") 
 
@@ -826,8 +850,8 @@ with tab2:
 
 
         #criação do segundo gráfico
-        
-        credito_agrupado_class =  credito.groupby(['id_mes','classificacao'])['valor'].sum().reset_index()
+        credito_ano = credito[credito['ano'].isin(selecao_ano_credito)]
+        credito_agrupado_class =  credito_ano.groupby(['id_mes','classificacao'])['valor'].sum().reset_index()
         
         cores = ["#fce7d2","#ffefa9","#f58f9a","#c0a1ae", "#bfd4ad","#000018","#578bc6"]
 
@@ -900,8 +924,8 @@ with tab2:
         st.title('Base Crédito')
 
         with st.popover('Filtros'):
-            filtro_id_mes_credito = st.multiselect('Selecione o mês',credito['id_mes'].unique(),list(credito['id_mes'].unique()), key='filtro_idmes_credito')
-            credito_filtrado = credito[credito['id_mes'].isin(filtro_id_mes_credito)]
+            filtro_id_mes_credito = st.multiselect('Selecione o mês',credito_ano['id_mes'].unique(),list(credito_ano['id_mes'].unique()), key='filtro_idmes_credito')
+            credito_filtrado = credito_ano[credito_ano['id_mes'].isin(filtro_id_mes_credito)]
             filtro_class_credito = st.multiselect('Selecione a classificação',credito_filtrado['classificacao'].unique(),list(credito_filtrado['classificacao'].unique()))
             credito_filtrado = credito_filtrado[credito_filtrado['classificacao'].isin(filtro_class_credito)]
         credito_filtrado
