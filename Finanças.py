@@ -48,6 +48,8 @@ patrimonio = conn.read(spreadsheet= url_patriomonio)
 orcamento = conn.read(spreadsheet= url_orcamento)
 
 
+
+
 tab1, tab2 = st.tabs(['Adicionar dados','Visualização'])
 
 with tab1:
@@ -62,8 +64,8 @@ with tab1:
         with st.form('form débito'):
             # Campos para inserir as informações do débito
             debito_mes_ref = st.selectbox('Selecione o mês referência:', 
-                                        ['01_2024','02_2024','03_2024','04_2024','05_2024','06_2024','07_2024',
-                                        '08_2024','09_2024','10_2024','11_2024','12_2024'], key='class-mesref_debito')
+                                        ['01_2025','02_2025','03_2025','04_2025','05_2025','06_2025','07_2025',
+                                        '08_2025','09_2025','10_2025','11_2025','12_2025'], key='class-mesref_debito')
 
             debito_data = st.text_input('Insirir Data', key="inserir-data-debito")
             debito_descricao = st.text_input('Insirir Descrição', key="inserir-descricao-debito")
@@ -106,7 +108,8 @@ with tab1:
         st.title('Crédito')
 
         credito_parcelas =  st.number_input('Inserir Parcelas', value=1)
-        meses_disponiveis = ['01_2024', '02_2024', '03_2024', '04_2024', '05_2024', '06_2024', '07_2024', '08_2024','09_2024','10_2024','11_2024','12_2024']
+        meses_disponiveis = ['01_2025','02_2025','03_2025','04_2025','05_2025','06_2025','07_2025',
+                                        '08_2025','09_2025','10_2025','11_2025','12_2025']
         credito_mes_parcela1 = st.selectbox('Selecione o mês inicial',  meses_disponiveis) 
         credito_valor = st.text_input('Insirir Valor Crédito', key = 'insirir-valor-credito')
         credito_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-credito')
@@ -150,7 +153,8 @@ with tab1:
         novos_receitas = []
         with st.form('form receita'):
             receita_data = st.text_input('Insirir Data',key = 'insirir-data-receita ')
-            receita_id_mes = st.selectbox('Selecione o mês referência:', ['01_2024','02_2024','03_2024','04_2024','05_2024','06_2024','07_2024','08_2024','09_2024','10_2024','11_2024','12_2024'], key='class-mesref_receita')
+            receita_id_mes = st.selectbox('Selecione o mês referência:', ['01_2025','02_2025','03_2025','04_2025','05_2025','06_2025','07_2025',
+                                        '08_2025','09_2025','10_2025','11_2025','12_2025'], key='class-mesref_receita')
             if receita_data  == "":
                 receita_data = "08/02/2000"
             else:
@@ -188,9 +192,8 @@ with tab1:
         st.title('Fixos')
         novos_fixos = []
         with st.form('form fixo'):
-            fixos_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2024','02_2024','03_2024','04_2024','05_2024',
-                                                                            '06_2024','07_2024','08_2024','09_2024','10_2024',
-                                                                            '11_2024','12_2024'], key='class-mesref_fixos')
+            fixos_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2025','02_2025','03_2025','04_2025','05_2025','06_2025','07_2025',
+                                        '08_2025','09_2025','10_2025','11_2025','12_2025'], key='class-mesref_fixos')
             
             fixos_data = st.text_input('Insirir Data', key = "inserir-data-fixos")
             fixos_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-fixos")
@@ -224,15 +227,45 @@ with tab1:
                 
                 conn.update(spreadsheet= url_extrato_fixos, data=fixo_concatenado)
 
+    with st.expander('Patrimônio'):
+        novos_patrimonios = []
+
+        with st.form('form patrimonio'):
+            patrimonio_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2025','02_2025','03_2025','04_2025','05_2025','06_2025','07_2025',
+                                            '08_2025','09_2025','10_2025','11_2025','12_2025'], key='class-mesref_patrimonio')
+
+            patrimonio_valor = st.text_input('Insirir Valor', key = "inserir-valor-patrimonio")
+
+            if patrimonio_valor == "":
+                patrimonio_valor = 1.0
+            else:
+                patrimonio_valor = patrimonio_valor
+
+            patrimonio_valor = float(patrimonio_valor)
+            patrimonio_direcionamento = st.selectbox('Selecione o direcionamento:', ['Patrimônio', 'Reserva Férias'], key='direcionamento-patrimonio')
+            patrimonio_classificacao = st.selectbox('Selecione a classificacação:', ['Saldo do mês', '13º','Renda extra','1/3 Férias','Bônus','Emergência','Outros',], key='class-patrimonio')
+            patrimonio_descricao =  st.text_input('Insirir Descrição', key = "inserir-descricao-patrimonio")
+
+            submit_button = st.form_submit_button("Adicionar Patrimônio")
+
+            if submit_button:
+                novo_patrimonio= [patrimonio_mes_ref, patrimonio_valor,patrimonio_direcionamento, patrimonio_classificacao , patrimonio_descricao ]
+
+                novos_patrimonios.append(novo_patrimonio)
+                novos_patrimonios_df = pd.DataFrame(novos_patrimonios, columns=['id_mes', 'valor','direcionamento','classificacao','descricao'])
+
+                patrimonio_concatenado = pd.concat([patrimonio, novos_patrimonios_df], ignore_index=True)
+                
+                conn.update(spreadsheet= url_patriomonio, data=patrimonio_concatenado)
+
     with st.expander('Investimentos'):
         st.title('Investimentos')
 
         novos_investimentos = []
         with st.form('form investimentos'):
 
-            investimentos_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2024','02_2024','03_2024','04_2024','05_2024',
-                                                                            '06_2024','07_2024','08_2024','09_2024','10_2024',
-                                                                            '11_2024','12_2024'], key='class-mesref_investimentos')
+            investimentos_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2025','02_2025','03_2025','04_2025','05_2025','06_2025','07_2025',
+                                        '08_2025','09_2025','10_2025','11_2025','12_2025'], key='class-mesref_investimentos')
             
             investimentos_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-investimentos")
             investimentos_tipo =  st.text_input('Insirir Tipo Investimentos', key = "inserir-tipo-investimentos")
@@ -268,9 +301,8 @@ with tab1:
         st.title('Empréstimos')
         novos_emprestimos = []
         with st.form('form emprestimos'):
-            emprestimos_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2024','02_2024','03_2024','04_2024','05_2024',
-                                                                            '06_2024','07_2024','08_2024','09_2024','10_2024',
-                                                                            '11_2024','12_2024'], key='class-mesref_emprestimos')
+            emprestimos_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2025','02_2025','03_2025','04_2025','05_2025','06_2025','07_2025',
+                                        '08_2025','09_2025','10_2025','11_2025','12_2025'], key='class-mesref_emprestimos')
             
             emprestimos_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-emprestimos")
             emprestimos_destinatario =  st.text_input('Insirir Destinatário', key = "inserir-destinatario-emprestimos")
@@ -312,9 +344,9 @@ with tab1:
                 #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
 
                 #a partir do calculo de data conseguimos ter o mes e jogamos lá
-                vr_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2024','02_2024','03_2024','04_2024','05_2024',
-                                                                                '06_2024','07_2024','08_2024','09_2024','10_2024',
-                                                                                '11_2024','12_2024'], key='class-mesref_vr')
+                vr_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2025','02_2025','03_2025','04_2025','05_2025','06_2025','07_2025',
+                                        '08_2025','09_2025','10_2025','11_2025','12_2025'], key='class-mesref_vr')
+
                 vr_data = st.text_input('Insirir Data',key = 'insirir-data-vr')
                 vr_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-vr')
                 vr_local =  st.text_input('Insirir Local', key = 'insirir-local-vr')
@@ -381,7 +413,9 @@ with tab2:
     orcamento_unificado['Saldo'] = round(orcamento_unificado['Saldo'],2) 
 
     with st.expander('Status Mês atual'):
-        meses = orcamento_unificado['id_mes_y'].unique().tolist()
+        
+        meses = orcamento_unificado['id_mes_x'].unique().tolist()
+        
         selecione_mes = st.multiselect('Filtre o mês:', meses, default=[meses[-1]])
         
 
@@ -391,7 +425,7 @@ with tab2:
         receitas_orcado.rename(columns={'classificacao_orcamento': 'classificacao'}, inplace=True)
         receitas_real = receita_agrupado
         receitas_real['id_class'] = receitas_real['id_mes'] + receitas_real['classificacao']
-
+        
         visualizacao_renda = st.radio("Escolha a visualização de renda", ['Apenas salário','Todos'])
 
         if visualizacao_renda == "Apenas salário":
@@ -407,6 +441,7 @@ with tab2:
         tipo_fixo = fixo_agrupado['classificacao'].unique().tolist()
         gastos_fixos_orcado = orcamento_mensal[orcamento_mensal['classificacao_orcamento'].isin(tipo_fixo)]
         gastos_fixos_orcado.rename(columns={'classificacao_orcamento': 'classificacao'}, inplace=True)
+        
         gastos_fixos_real = fixo_agrupado
         gastos_fixos_real['id_class'] = gastos_fixos_real['id_mes'] + gastos_fixos_real['classificacao']
 
@@ -422,7 +457,7 @@ with tab2:
             return df
 
         def construir_dre_classificacao(df, classificacao_nome):
-            df = df.groupby("classificacao_real").agg({
+            df = df.groupby("classificacao_consolidado").agg({
                 "valor": "sum",
                 "valor_orcamento": "sum"
             }).reset_index()
@@ -431,7 +466,7 @@ with tab2:
             df["diferenca"] = df["valor"] - df["valor_orcamento"]
             dre_classificacao = {}
             for _, row in df.iterrows():
-                classificacao = row["classificacao_real"]
+                classificacao = row["classificacao_consolidado"]
                 dre_classificacao[f"    - {classificacao}"] = {
                     "real": row["valor"],
                     "orcado": row["valor_orcamento"]
@@ -447,12 +482,33 @@ with tab2:
         # Calcula diferenças
         receitas = calcular_diferencas(receitas_real, receitas_orcado)
         gastos_fixos = calcular_diferencas(gastos_fixos_real, gastos_fixos_orcado)
+
+        receitas['id_mes_consolidado'] = receitas.apply( lambda row: row['id_mes_orcado'] if row['id_mes_real'] == 0 else (
+                                    row['id_mes_real'] if row['id_mes_orcado'] == '0' else row['id_mes_real']
+                                        ), axis=1
+                                    )
+
+        gastos_fixos['id_mes_consolidado'] = gastos_fixos.apply( lambda row: row['id_mes_orcado'] if row['id_mes_real'] == 0 else (
+                                        row['id_mes_real'] if row['id_mes_orcado'] == '0' else row['id_mes_real']
+                                            ), axis=1
+                                        )
+
+
+        receitas['classificacao_consolidado'] = receitas.apply( lambda row: row['classificacao_orcado'] if row['classificacao_real'] == 0 else (
+                                    row['id_mes_real'] if row['classificacao_orcado'] == '0' else row['classificacao_real']
+                                        ), axis=1
+                                    )
+
+        gastos_fixos['classificacao_consolidado'] = gastos_fixos.apply( lambda row: row['classificacao_orcado'] if row['classificacao_real'] == 0 else (
+                                        row['classificacao_real'] if row['classificacao_orcado'] == '0' else row['classificacao_real']
+                                            ), axis=1
+                                        )
+
+
         
-        receitas = receitas[receitas['id_mes_real'].isin(selecione_mes)]
-        receitas = receitas[receitas['id_mes_orcado'].isin(selecione_mes)]
-        
-        gastos_fixos = gastos_fixos[gastos_fixos['id_mes_real'].isin(selecione_mes)]
-        gastos_fixos = gastos_fixos[gastos_fixos['id_mes_orcado'].isin(selecione_mes)]
+        receitas = receitas[receitas['id_mes_consolidado'].isin(selecione_mes)]
+        gastos_fixos = gastos_fixos[gastos_fixos['id_mes_consolidado'].isin(selecione_mes)]
+
         
         debito_total_filtrado = debito_agrupado[debito_agrupado['id_mes'].isin(selecione_mes)]
         credito_total_filtrado = credito_agrupado[credito_agrupado['id_mes'].isin(selecione_mes)]
@@ -844,9 +900,100 @@ with tab2:
         st.title('Base Crédito')
 
         with st.popover('Filtros'):
-            filtro_id_mes_credito = st.multiselect('Selecione o mês',credito['id_mes'].unique(),list(credito['id_mes'].unique()))
+            filtro_id_mes_credito = st.multiselect('Selecione o mês',credito['id_mes'].unique(),list(credito['id_mes'].unique()), key='filtro_idmes_credito')
             credito_filtrado = credito[credito['id_mes'].isin(filtro_id_mes_credito)]
             filtro_class_credito = st.multiselect('Selecione a classificação',credito_filtrado['classificacao'].unique(),list(credito_filtrado['classificacao'].unique()))
             credito_filtrado = credito_filtrado[credito_filtrado['classificacao'].isin(filtro_class_credito)]
         credito_filtrado
+
+    with st.expander('Status Patrimônio'):
+        
+        patrimonio_sem_reservas = patrimonio[patrimonio['direcionamento'] == "Patrimônio"]
+        total_patrimonio_sem_reservas =  round(patrimonio_sem_reservas['valor'].sum(),2)
+
+        
+        total_emprestimo = round(emprestimo['valor'].sum(),2)
+        total_investimento = round(investimento['valor'].sum(),2)
+        valor_em_maos = total_patrimonio_sem_reservas - total_emprestimo - total_investimento
+        patrimonio_agrupado = patrimonio.groupby(['direcionamento'])['valor'].sum().reset_index()
+
+        novas_linhas = pd.DataFrame({ 'direcionamento': ['Valor em mãos','Empréstimo', 'Investimento'], 'valor': [valor_em_maos,total_emprestimo, total_investimento]})
+        patrimonio_agrupado = pd.concat([patrimonio_agrupado, novas_linhas], ignore_index=True)
+        patrimonio_agrupado = patrimonio_agrupado[patrimonio_agrupado['direcionamento'] != 'Patrimônio']
+        patrimonio_agrupado['percentual'] = (patrimonio_agrupado['valor'] / patrimonio_sem_reservas['valor'].sum() * 100).round(2)
+
+        
+        col1,col2 = st.columns(2)
+        with col1:
+            patrimonio_total  = patrimonio['valor'].sum()
+            st.metric(label="Patrimônio total", value=patrimonio_total) 
+        with col2:
+            patrimonio_total_sem_reservas  = patrimonio_sem_reservas['valor'].sum()
+            st.metric(label="Patrimônio total - Sem reservas", value=patrimonio_total_sem_reservas) 
+
+        
+
+
+        tipo_visualizacao_patrimonio1 = st.radio("Selecione a visualização:", ["valor","percentual"])
+
+        graf_patrimonio_quebrado = px.bar(
+            patrimonio_agrupado,
+            x='direcionamento',
+            y=tipo_visualizacao_patrimonio1,
+            text=tipo_visualizacao_patrimonio1,
+            template=template_dash,  # Pode ajustar o template ao seu gosto
+            color_discrete_sequence=["#c1e0e0"]
+        )
+
+        graf_patrimonio_quebrado.update_layout(
+            showlegend=False,
+            xaxis_title='Mês',
+            yaxis_title=tipo_visualizacao_patrimonio1,
+            plot_bgcolor=bg_color_dash,
+            title={
+                'text': f"<b> Distribuição patrimônio - {tipo_visualizacao_patrimonio1} <b>",
+                'y': 0.9,
+                'x': 0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'
+            }
+        )
+
+        graf_patrimonio_quebrado.update_yaxes(visible=False, showticklabels=False)
+        st.plotly_chart(graf_patrimonio_quebrado, use_container_width=True)
+
+        patrimonio_agrupado_mes = patrimonio_sem_reservas.groupby(['id_mes'])['valor'].sum().reset_index()
+
+
+        tipo_visualizacao_patrimonio2 = st.radio("Selecione a visualização:", ["Acumulado","Arrecadado por mês"])
+        # Lógica para acumulado
+        if tipo_visualizacao_patrimonio2 == "Acumulado":
+            patrimonio_agrupado_mes['valor'] = patrimonio_agrupado_mes['valor'].cumsum()
+
+        # Criar o gráfico
+        graf_patrimonio = px.bar(
+            patrimonio_agrupado_mes,
+            x='id_mes',
+            y='valor',
+            text='valor',
+            template=template_dash,  # Pode ajustar o template ao seu gosto
+            color_discrete_sequence=["#c1e0e0"]
+        )
+
+        graf_patrimonio.update_layout(
+            showlegend=False,
+            xaxis_title='Mês',
+            yaxis_title='Patrimônio total' if tipo_visualizacao_patrimonio2 == "Acumulado" else 'Arrecadado por mês',
+            plot_bgcolor=bg_color_dash,
+            title={
+                'text': f"<b> {'# PATRIMÔNIO ACUMULADO' if tipo_visualizacao_patrimonio2 == 'Acumulado' else '# ARRECADADO POR MÊS'} <b>",
+                'y': 0.9,
+                'x': 0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'
+            }
+        )
+
+        graf_patrimonio.update_yaxes(visible=False, showticklabels=False)
+        st.plotly_chart(graf_patrimonio, use_container_width=True)
 
