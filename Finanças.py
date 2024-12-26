@@ -37,15 +37,15 @@ url_patriomonio = st.secrets["connections"]["gsheets"]["url_patrimonio"]
 
 
 
-debito = conn.read(spreadsheet= url_debito, ttl =120)
-credito = conn.read(spreadsheet= url_credito, ttl =120)
-receita = conn.read(spreadsheet= url_receitas,ttl =120)
-fixo = conn.read(spreadsheet= url_extrato_fixos, ttl =120)
-investimento = conn.read(spreadsheet= url_investimento, ttl =120)
-emprestimo = conn.read(spreadsheet= url_emprestimos, ttl =120)
-vr = conn.read(spreadsheet= url_extrato_vr,ttl =120)
-patrimonio = conn.read(spreadsheet= url_patriomonio, ttl =120)
-orcamento = conn.read(spreadsheet= url_orcamento, ttl =120)
+debito = conn.read(spreadsheet= url_debito, ttl=300)
+credito = conn.read(spreadsheet= url_credito, ttl=300)
+receita = conn.read(spreadsheet= url_receitas, ttl=300)
+fixo = conn.read(spreadsheet= url_extrato_fixos, ttl=300)
+investimento = conn.read(spreadsheet= url_investimento, ttl=300)
+emprestimo = conn.read(spreadsheet= url_emprestimos, ttl=300)
+vr = conn.read(spreadsheet= url_extrato_vr, ttl=300)
+patrimonio = conn.read(spreadsheet= url_patriomonio, ttl=300)
+orcamento = conn.read(spreadsheet= url_orcamento, ttl=300)
 
 
 
@@ -370,9 +370,9 @@ with tab1:
                 submit_button = st.form_submit_button("Adicionar VR")
 
                 if submit_button:
-                    novo_vr = [ vr_data, vr_mes_ref, vr_descrição,vr_local,  vr_classificacao, vr_valor]
+                    novo_vr = [ vr_data, vr_mes_ref, vr_descrição,vr_local,  vr_classificacao, vr_valor,2025]
                     novos_vrs.append(novo_vr)
-                    novos_vrs_df = pd.DataFrame(novos_vrs, columns=['data', 'id_mes', 'descricao','local','classificacao','valor'])
+                    novos_vrs_df = pd.DataFrame(novos_vrs, columns=['data', 'id_mes', 'descricao','local','classificacao','valor','ano'])
 
                     vr_concatenado = pd.concat([vr, novos_vrs_df], ignore_index=True)
                     
@@ -420,8 +420,11 @@ with tab2:
         
 
         
+        orcamento_unificado_debito = orcamento_unificado[orcamento_unificado['classificacao'] == "Débito"]
+        orcamento_unificado_debito = orcamento_unificado_debito.sort_values(by='ano')
         
-        meses = orcamento_unificado['id_mes_x'].unique().tolist()
+
+        meses = orcamento_unificado_debito['id_mes_y'].unique().tolist()
         
         selecione_mes = st.multiselect('Filtre o mês:', meses, default=[meses[-1]])
         
@@ -986,8 +989,12 @@ with tab2:
         graf_patrimonio_quebrado.update_yaxes(visible=False, showticklabels=False)
         st.plotly_chart(graf_patrimonio_quebrado, use_container_width=True)
 
-        patrimonio_agrupado_mes = patrimonio_sem_reservas.groupby(['id_mes'])['valor'].sum().reset_index()
+        patrimonio_agrupado_mes = patrimonio_sem_reservas.groupby(['id_mes','ano'])['valor'].sum().reset_index()
 
+        selecao_ano_patrimonio = st.multiselect('Filtre o ano:', [2024,2025], default=2025, key='ano-patrimonio')
+
+
+        patrimonio_agrupado_mes =  patrimonio_agrupado_mes[patrimonio_agrupado_mes['ano'].isin(selecao_ano_patrimonio)]
 
         tipo_visualizacao_patrimonio2 = st.radio("Selecione a visualização:", ["Acumulado","Arrecadado por mês"])
         # Lógica para acumulado
@@ -1021,3 +1028,62 @@ with tab2:
         graf_patrimonio.update_yaxes(visible=False, showticklabels=False)
         st.plotly_chart(graf_patrimonio, use_container_width=True)
 
+
+        with st.popover('Filtros'):
+            selecao_ano_patrimonio2 = st.multiselect('Selecione o ano',patrimonio['ano'].unique(),list(patrimonio['ano'].unique()), key='filtro_idmes_patrimonio-2')
+            patrimonio_filtrado = patrimonio[patrimonio['ano'].isin(selecao_ano_patrimonio2)]
+
+            filtro_id_mes_patrimonio = st.multiselect('Selecione o mês',patrimonio['id_mes'].unique(),list(patrimonio['id_mes'].unique()), key='filtro_idmes_patrimonio')
+            patrimonio_filtrado = patrimonio_filtrado[patrimonio_filtrado['id_mes'].isin(filtro_id_mes_patrimonio)]
+
+            filtro_direcionamento_patrimonio = st.multiselect('Selecione o direcionamento',patrimonio_filtrado['direcionamento'].unique(),list(patrimonio_filtrado['direcionamento'].unique()))
+            patrimonio_filtrado = patrimonio_filtrado[patrimonio_filtrado['direcionamento'].isin(filtro_direcionamento_patrimonio)]
+
+            filtro_classificacao_patrimonio = st.multiselect('Selecione a classificação',patrimonio_filtrado['classificacao'].unique(),list(patrimonio_filtrado['classificacao'].unique()))
+            patrimonio_filtrado = patrimonio_filtrado[patrimonio_filtrado['classificacao'].isin(filtro_classificacao_patrimonio)]
+
+        patrimonio_filtrado
+
+    with st.expander('Status Emprestimos'):
+        
+
+        emprestimo = emprestimo[emprestimo['emprestimo_destinatario'] != 'Pai']
+        valor_total_emprestado = round(emprestimo['valor'].sum(),2) 
+        st.metric(label="Valor total emprestado", value=valor_total_emprestado)
+        emprestimo_agrupado_destinatario =  emprestimo.groupby('emprestimo_destinatario')['valor'].sum().reset_index()
+        emprestimo_agrupado_destinatario = emprestimo_agrupado_destinatario[emprestimo_agrupado_destinatario['valor'] != 0]
+
+        
+        graf_emprestimo = px.bar(
+            emprestimo_agrupado_destinatario,
+            x= 'emprestimo_destinatario',
+            y ='valor',
+            text = 'valor',
+            template =template_dash,
+            color_discrete_sequence = ["#c1e0e0"]
+        )
+        graf_emprestimo.update_layout(
+            showlegend=False,
+            xaxis_title='Pessoa',
+            yaxis_title='Valor total',
+            plot_bgcolor =bg_color_dash,
+            title={
+                'text': "<b> # VALOR EMPRESTADO POR PESSOA <b>",
+                'y': 0.9,
+                'x': 0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'}
+        )
+
+        graf_emprestimo.update_yaxes(visible=False,showticklabels=False)
+        st.plotly_chart(graf_emprestimo, use_container_width=True)
+
+
+        filtro_emprestimo = st.multiselect('Selecione a pessoa',emprestimo['emprestimo_destinatario'].unique(),list(emprestimo['emprestimo_destinatario'].unique()))
+        emprestimo_filtrado = emprestimo[emprestimo['emprestimo_destinatario'].isin(filtro_emprestimo)]
+
+        emprestimo_filtrado
+
+
+    with st.expander('Status Investimentos'):
+        investimento
