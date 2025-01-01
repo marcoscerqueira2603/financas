@@ -932,7 +932,7 @@ with tab2:
             filtro_class_credito = st.multiselect('Selecione a classificação',credito_filtrado['classificacao'].unique(),list(credito_filtrado['classificacao'].unique()))
             credito_filtrado = credito_filtrado[credito_filtrado['classificacao'].isin(filtro_class_credito)]
             filtro_credito_cartao = st.multiselect('Selecione o cartão',credito_filtrado['credito_cartao'].unique(),list(credito_filtrado['credito_cartao'].unique()))
-            credito_filtrado = credito_filtrado[credito_filtrado['classificacao'].isin(filtro_credito_cartao)]
+            credito_filtrado = credito_filtrado[credito_filtrado['credito_cartao'].isin(filtro_credito_cartao)]
         credito_filtrado
 
     with st.expander('Status Patrimônio'):
