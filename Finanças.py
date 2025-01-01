@@ -198,7 +198,7 @@ with tab1:
             fixos_data = st.text_input('Insirir Data', key = "inserir-data-fixos")
             fixos_descrição =  st.text_input('Insirir Descrição', key = "inserir-descricao-fixos")
 
-            fixos_classificacao = st.selectbox('Selecione o tipo:', ['Casa', 'Fiel Torcedor', 'Cabelo', 'Internet Celular', 'Spotify','Passagem', 'Seguro Celular','Streaming','Tembici - Itaú',], key='class-fixos')
+            fixos_classificacao = st.selectbox('Selecione o tipo:', ['Casa', 'Fiel Torcedor', 'Cabelo', 'Internet Celular', 'Academia','Passagem', 'Seguro Celular','Streaming','Tembici - Itaú',], key='class-fixos')
             fixos_valor = st.text_input('Insirir Valor', key = "inserir-valor-fixos")
 
             if fixos_valor == "":
