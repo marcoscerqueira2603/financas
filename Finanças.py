@@ -17,8 +17,10 @@ st.set_page_config(
 )
 
 
-st.write(st.secrets)
-st.write(st.secrets.get("credentials"))
+if "credentials" in st.secrets:
+    st.write(st.secrets["credentials"])
+else:
+    st.error("A chave 'credentials' não foi encontrada no secrets!")
 
 # Inicializa a sessão de autenticação
 if 'autenticado' not in st.session_state:
