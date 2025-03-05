@@ -16,35 +16,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Verifica se já existe uma sessão de autenticação
-if 'autenticado' not in st.session_state:
-    st.session_state.autenticado = False
 
-# Função de verificação de login
-def login(usuario, senha):
-    usuarios = st.secrets["credentials"]
-    if usuario in usuarios and usuarios[usuario] == senha:
-        st.session_state.autenticado = True
-        st.session_state.usuario = usuario
-        st.success(f"Bem-vindo, {usuario}!")
-    else:
-        st.error("Usuário ou senha incorretos.")
-
-# Formulário de login
-if not st.session_state.autenticado:
-    st.title("Login")
-    usuario = st.text_input("Usuário")
-    senha = st.text_input("Senha", type="password")
-    
-    if st.button("Entrar"):
-        login(usuario, senha)
-else:
-    st.title("Área Privada")
-    st.write(f"Olá, {st.session_state.usuario}!")
-    
-    if st.button("Sair"):
-        st.session_state.autenticado = False
-        st.session_state.usuario = None
 
 
 st.title('Página de Organização Financeira')
@@ -69,15 +41,15 @@ url_patriomonio = st.secrets["connections"]["gsheets"]["url_patrimonio"]
 
 
 
-debito = conn.read(spreadsheet= url_debito)
-credito = conn.read(spreadsheet= url_credito)
-receita = conn.read(spreadsheet= url_receitas)
-fixo = conn.read(spreadsheet= url_extrato_fixos)
-investimento = conn.read(spreadsheet= url_investimento)
-emprestimo = conn.read(spreadsheet= url_emprestimos)
-vr = conn.read(spreadsheet= url_extrato_vr)
-patrimonio = conn.read(spreadsheet= url_patriomonio)
-orcamento = conn.read(spreadsheet= url_orcamento)
+debito = conn.read(spreadsheet= url_debito, ttl=30)
+credito = conn.read(spreadsheet= url_credito, ttl=30)
+receita = conn.read(spreadsheet= url_receitas, ttl=30)
+fixo = conn.read(spreadsheet= url_extrato_fixos, ttl=30)
+investimento = conn.read(spreadsheet= url_investimento, ttl=30)
+emprestimo = conn.read(spreadsheet= url_emprestimos, ttl=30)
+vr = conn.read(spreadsheet= url_extrato_vr, ttl=30)
+patrimonio = conn.read(spreadsheet= url_patriomonio, ttl=30)
+orcamento = conn.read(spreadsheet= url_orcamento, ttl=30)
 
 
 
