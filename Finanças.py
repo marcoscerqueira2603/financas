@@ -10,6 +10,36 @@ from streamlit_gsheets import GSheetsConnection
 from dateutil.relativedelta import relativedelta
 
 
+# Verifica se já existe uma sessão de autenticação
+if 'autenticado' not in st.session_state:
+    st.session_state.autenticado = False
+
+# Função de verificação de login
+def login(usuario, senha):
+    usuarios = st.secrets["credentials"]
+    if usuario in usuarios and usuarios[usuario] == senha:
+        st.session_state.autenticado = True
+        st.session_state.usuario = usuario
+        st.success(f"Bem-vindo, {usuario}!")
+    else:
+        st.error("Usuário ou senha incorretos.")
+
+# Formulário de login
+if not st.session_state.autenticado:
+    st.title("Login")
+    usuario = st.text_input("Usuário")
+    senha = st.text_input("Senha", type="password")
+    
+    if st.button("Entrar"):
+        login(usuario, senha)
+else:
+    st.title("Área Privada")
+    st.write(f"Olá, {st.session_state.usuario}!")
+    
+    if st.button("Sair"):
+        st.session_state.autenticado = False
+        st.session_state.usuario = None
+
 st.set_page_config(
     page_title="Finanças",
     layout="wide"
@@ -37,15 +67,15 @@ url_patriomonio = st.secrets["connections"]["gsheets"]["url_patrimonio"]
 
 
 
-debito = conn.read(spreadsheet= url_debito, ttl=300)
-credito = conn.read(spreadsheet= url_credito, ttl=300)
-receita = conn.read(spreadsheet= url_receitas, ttl=300)
-fixo = conn.read(spreadsheet= url_extrato_fixos, ttl=300)
-investimento = conn.read(spreadsheet= url_investimento, ttl=300)
-emprestimo = conn.read(spreadsheet= url_emprestimos, ttl=300)
-vr = conn.read(spreadsheet= url_extrato_vr, ttl=300)
-patrimonio = conn.read(spreadsheet= url_patriomonio, ttl=300)
-orcamento = conn.read(spreadsheet= url_orcamento, ttl=300)
+debito = conn.read(spreadsheet= url_debito)
+credito = conn.read(spreadsheet= url_credito)
+receita = conn.read(spreadsheet= url_receitas)
+fixo = conn.read(spreadsheet= url_extrato_fixos)
+investimento = conn.read(spreadsheet= url_investimento)
+emprestimo = conn.read(spreadsheet= url_emprestimos)
+vr = conn.read(spreadsheet= url_extrato_vr)
+patrimonio = conn.read(spreadsheet= url_patriomonio)
+orcamento = conn.read(spreadsheet= url_orcamento)
 
 
 
@@ -323,7 +353,7 @@ with tab1:
                 emprestimos_data = emprestimos_data
 
 
-            submit_button = st.form_submit_button("Adicionar Fixo")
+            submit_button = st.form_submit_button("Adicionar empréstimo")
 
             if submit_button:
                 novo_emprestimo= [emprestimos_mes_ref, emprestimos_descrição,emprestimos_destinatario, emprestimos_data, emprestimos_valor,2025]
@@ -383,6 +413,17 @@ with tab1:
   
 with tab2:
 
+
+
+    debito = conn.read(spreadsheet= url_debito, ttl=180)
+    credito = conn.read(spreadsheet= url_credito, ttl=180)
+    receita = conn.read(spreadsheet= url_receitas, ttl=180)
+    fixo = conn.read(spreadsheet= url_extrato_fixos, ttl=180)
+    investimento = conn.read(spreadsheet= url_investimento, ttl=180)
+    emprestimo = conn.read(spreadsheet= url_emprestimos, ttl=180)
+    vr = conn.read(spreadsheet= url_extrato_vr, ttl=180)
+    patrimonio = conn.read(spreadsheet= url_patriomonio, ttl=180)
+    orcamento = conn.read(spreadsheet= url_orcamento, ttl=180)
     
 
 
@@ -1088,4 +1129,7 @@ with tab2:
 
 
     with st.expander('Status Investimentos'):
+
+        valor_total_investido = round(investimento['valor'].sum(),2) 
+        st.metric(label="Valor total investido", value=valor_total_investido)
         investimento
