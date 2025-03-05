@@ -10,6 +10,12 @@ from streamlit_gsheets import GSheetsConnection
 from dateutil.relativedelta import relativedelta
 
 
+
+st.set_page_config(
+    page_title="Finanças",
+    layout="wide"
+)
+
 # Verifica se já existe uma sessão de autenticação
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
@@ -40,10 +46,6 @@ else:
         st.session_state.autenticado = False
         st.session_state.usuario = None
 
-st.set_page_config(
-    page_title="Finanças",
-    layout="wide"
-)
 
 st.title('Página de Organização Financeira')
 
