@@ -16,6 +16,10 @@ st.set_page_config(
     layout="wide"
 )
 
+
+st.write(st.secrets)
+st.write(st.secrets.get("credentials"))
+
 # Inicializa a sessão de autenticação
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
