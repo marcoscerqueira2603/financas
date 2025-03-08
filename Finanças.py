@@ -43,15 +43,15 @@ url_patriomonio = st.secrets["connections"]["gsheets"]["url_patrimonio"]
 
 
 
-debito = conn.read(spreadsheet= url_debito, ttl=30)
-credito = conn.read(spreadsheet= url_credito, ttl=30)
-receita = conn.read(spreadsheet= url_receitas, ttl=30)
-fixo = conn.read(spreadsheet= url_extrato_fixos, ttl=30)
-investimento = conn.read(spreadsheet= url_investimento, ttl=30)
-emprestimo = conn.read(spreadsheet= url_emprestimos, ttl=30)
-vr = conn.read(spreadsheet= url_extrato_vr, ttl=30)
-patrimonio = conn.read(spreadsheet= url_patriomonio, ttl=30)
-orcamento = conn.read(spreadsheet= url_orcamento, ttl=30)
+debito = conn.read(spreadsheet= url_debito, ttl=120)
+credito = conn.read(spreadsheet= url_credito, ttl=120)
+receita = conn.read(spreadsheet= url_receitas, ttl=120)
+fixo = conn.read(spreadsheet= url_extrato_fixos, ttl=120))
+investimento = conn.read(spreadsheet= url_investimento, ttl=120)
+emprestimo = conn.read(spreadsheet= url_emprestimos, ttl=120)
+vr = conn.read(spreadsheet= url_extrato_vr, ttl=120)
+patrimonio = conn.read(spreadsheet= url_patriomonio, ttl=120)
+orcamento = conn.read(spreadsheet= url_orcamento, ttl=120)
 
 
 
@@ -389,17 +389,6 @@ with tab1:
 
 with tab2:
 
-
-
-    debito = conn.read(spreadsheet= url_debito, ttl=180)
-    credito = conn.read(spreadsheet= url_credito, ttl=180)
-    receita = conn.read(spreadsheet= url_receitas, ttl=180)
-    fixo = conn.read(spreadsheet= url_extrato_fixos, ttl=180)
-    investimento = conn.read(spreadsheet= url_investimento, ttl=180)
-    emprestimo = conn.read(spreadsheet= url_emprestimos, ttl=180)
-    vr = conn.read(spreadsheet= url_extrato_vr, ttl=180)
-    patrimonio = conn.read(spreadsheet= url_patriomonio, ttl=180)
-    orcamento = conn.read(spreadsheet= url_orcamento, ttl=180)
     
 
 
