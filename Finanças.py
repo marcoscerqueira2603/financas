@@ -15,12 +15,7 @@ st.set_page_config(
     page_title="Finanças - Input",
     layout="wide",  initial_sidebar_state='collapsed'
 )
-
-
-
     
-
-
 st.title('Página de Organização Financeira')
 
 template_dash = "plotly_white"
