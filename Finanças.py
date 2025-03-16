@@ -63,12 +63,12 @@ with tab1:
     with st.expander('Débito'):
         st.title('Débito')
 
-        #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
-        novos_debitos = []
+        if "df_debitos" not in st.session_state:
+            st.session_state.df_debitos = pd.DataFrame(columns=["id_mes", "data", "classificacao", "descricao", "debito_compra_credito", "valor", "ano"])
 
 
         with st.form('form débito'):
-            # Campos para inserir as informações do débito
+
             debito_mes_ref = st.selectbox('Selecione o mês referência:', 
                                         ['01_2025','02_2025','03_2025','04_2025','05_2025','06_2025','07_2025',
                                         '08_2025','09_2025','10_2025','11_2025','12_2025'], key='class-mesref_debito')
@@ -98,20 +98,42 @@ with tab1:
             submit_button = st.form_submit_button("Adicionar Débito")
 
             if submit_button:
+                    # Criando um DataFrame com os novos débitos
+                    novo_debito = pd.DataFrame([{
+                        "id_mes": debito_mes_ref,
+                        "data": debito_data,
+                        "classificacao": debito_classificacao,
+                        "descricao": debito_descricao,
+                        "debito_compra_credito": debito_compracredito,
+                        "valor": debito_valor,
+                        "ano": 2025
+                    }])
+
+                    # Adiciona ao DataFrame da sessão
+                    st.session_state.df_debitos = pd.concat([st.session_state.df_debitos, novo_debito], ignore_index=True)
+
+                    st.success("Débito adicionado! Confira na tabela abaixo antes de enviar ao Google Sheets.")
 
 
-                # Adiciona o novo débito à lista de débitos
-                novo_debito = [debito_mes_ref, debito_data, debito_classificacao, debito_descricao, debito_compracredito, debito_valor,2025]
-                novos_debitos.append(novo_debito)
+        st.session_state.df_debitos
+          
+        if st.button("Enviar ao Google Sheets"):
+            df_debito = pd.concat([debito, st.session_state.df_debitos], ignore_index=True)
+            
+            conn.update(spreadsheet=url_debito, data=df_debito)
+            st.success("Débitos enviados com sucesso!")
 
-                novos_debitos_df = pd.DataFrame(novos_debitos, columns=["id_mes", "data", "classificacao", "descricao", "debito_compra_credito", "valor",'ano'])
-                debito_concatenado = pd.concat([debito, novos_debitos_df], ignore_index=True)
-                
-                conn.update(spreadsheet= url_debito, data=debito_concatenado)
+            # Limpa os débitos da sessão
+            st.session_state.df_debitos = pd.DataFrame(columns=["id_mes", "data", "classificacao", "descricao", "debito_compra_credito", "valor", "ano"])
+
+
 
     with st.expander('Crédito'):
 
         st.title('Crédito')
+
+        if "df_creditos" not in st.session_state:
+            st.session_state.df_creditos = pd.DataFrame(columns=['id_mes', 'credito_cartao','descricao','classificacao','valor','ano'])
 
         credito_parcelas =  st.number_input('Inserir Parcelas', value=1)
         meses_disponiveis = ['01_2025','02_2025','03_2025','04_2025','05_2025','06_2025','07_2025',
@@ -132,8 +154,6 @@ with tab1:
 
         valor_parcela = round(credito_valor / credito_parcelas, 2)
 
-
-
         novos_creditos = []  # Inicializa a lista antes de usá-la
 
         # Exibir formulário no Streamlit
@@ -147,15 +167,30 @@ with tab1:
                     novos_creditos.append(novo_credito)
 
 
-                    # Avançar para o próximo mês
                     mes_inicial += relativedelta(months=1)
                 novos_creditos_df = pd.DataFrame(novos_creditos, columns=['id_mes', 'credito_cartao','descricao','classificacao','valor','ano' ])
+    
+                st.session_state.df_creditos = pd.concat([st.session_state.df_creditos, novos_creditos_df], ignore_index=True)
 
-                credito_concatenado = pd.concat([credito,novos_creditos_df], ignore_index=True)
-                conn.update(spreadsheet= url_credito, data=credito_concatenado)
+                st.success("Crédito adicionado! Confira na tabela abaixo antes de enviar ao Google Sheets.")
             
+        st.session_state.df_creditos
+          
+        if st.button("Enviar ao Google Sheets", key='enviar-sheets-creditos'):
+            df_credito = pd.concat([credito, st.session_state.df_creditos], ignore_index=True)
+            
+            conn.update(spreadsheet=url_credito, data=df_credito)
+            st.success("Créditos enviados com sucesso!")
+
+            # Limpa os débitos da sessão
+            st.session_state.df_creditos = pd.DataFrame(columns=['id_mes', 'credito_cartao','descricao','classificacao','valor','ano'])
+
+
     with st.expander("Receita"): 
         st.title("Receita")
+
+        if "df_receitas" not in st.session_state:
+            st.session_state.df_receitas = pd.DataFrame(columns=['id_mes', 'data','classificacao','descricao','valor','ano'])
         novos_receitas = []
         with st.form('form receita'):
             receita_data = st.text_input('Insirir Data',key = 'insirir-data-receita ')
@@ -188,11 +223,25 @@ with tab1:
                 novos_receitas.append(novo_receita)
                 novos_receitas_df = pd.DataFrame(novos_receitas, columns=['id_mes', 'data','classificacao','descricao','valor','ano'])
 
+                st.session_state.df_receitas = pd.concat([st.session_state.df_receitas,novos_receitas_df ], ignore_index=True)
+
+                st.success("Receita adicionado! Confira na tabela abaixo antes de enviar ao Google Sheets.")
 
 
-                receita_concatenado = pd.concat([receita, novos_receitas_df], ignore_index=True)
-                
-                conn.update(spreadsheet= url_receitas, data=receita_concatenado)
+
+        st.session_state.df_receitas
+          
+        if st.button("Enviar ao Google Sheets", key='enviar-sheets-receitas'):
+            df_receita = pd.concat([receita, st.session_state.df_receitas], ignore_index=True)
+            
+            conn.update(spreadsheet=url_receitas, data=df_receita)
+
+            st.success("Receitas enviados com sucesso!")
+
+            # Limpa os débitos da sessão
+            st.session_state.receitas = pd.DataFrame(columns=['id_mes', 'data','classificacao','descricao','valor','ano'])
+
+            
         
     with st.expander('Fixos'):
         st.title('Fixos')
@@ -388,11 +437,6 @@ with tab1:
 
 
 with tab2:
-
-    
-
-
-
     #agrupando planilhas de gastos mensais
     fixo_agrupado = fixo.groupby(['id_mes', 'classificacao'])['valor'].sum().reset_index()
     debito_agrupado = debito.groupby(['id_mes'])['valor'].sum().reset_index()
@@ -423,15 +467,11 @@ with tab2:
     orcamento_unificado['Saldo'] = round(orcamento_unificado['Saldo'],2) 
 
     with st.expander('Status Mês atual'):
-        
-
-        
         orcamento_unificado_debito = orcamento_unificado[orcamento_unificado['classificacao'] == "Débito"]
         orcamento_unificado_debito = orcamento_unificado_debito.sort_values(by='ano')
         
-
         meses = orcamento_unificado_debito['id_mes_y'].unique().tolist()
-        
+
         selecione_mes = st.multiselect('Filtre o mês:', meses, default=[meses[-1]])
         
 
@@ -813,6 +853,12 @@ with tab2:
             debito_filtrado = debito_ano[debito_ano['id_mes'].isin(filtro_id_mes)]
             filtro_class = st.multiselect('Selecione a classificação',debito_filtrado['classificacao'].unique(),list(debito_filtrado['classificacao'].unique()))
             debito_filtrado = debito_filtrado[debito_filtrado['classificacao'].isin(filtro_class)]
+        
+
+        
+        debito_filtrado_soma  = debito_filtrado['valor'].sum()
+
+        st.metric(label="Valor Total", value=f"{round(debito_filtrado_soma,2)}") 
         debito_filtrado
 
     with st.expander('Status Crédito'):
@@ -939,6 +985,12 @@ with tab2:
             credito_filtrado = credito_filtrado[credito_filtrado['classificacao'].isin(filtro_class_credito)]
             filtro_credito_cartao = st.multiselect('Selecione o cartão',credito_filtrado['credito_cartao'].unique(),list(credito_filtrado['credito_cartao'].unique()))
             credito_filtrado = credito_filtrado[credito_filtrado['credito_cartao'].isin(filtro_credito_cartao)]
+        
+
+                
+        credito_filtrado_soma  = credito_filtrado['valor'].sum()
+
+        st.metric(label="Valor Total", value=f"{round(credito_filtrado_soma,2)}") 
         credito_filtrado
 
     with st.expander('Status Patrimônio'):
@@ -1050,6 +1102,10 @@ with tab2:
             filtro_classificacao_patrimonio = st.multiselect('Selecione a classificação',patrimonio_filtrado['classificacao'].unique(),list(patrimonio_filtrado['classificacao'].unique()))
             patrimonio_filtrado = patrimonio_filtrado[patrimonio_filtrado['classificacao'].isin(filtro_classificacao_patrimonio)]
 
+
+        patrimonio_filtrado_soma  = patrimonio_filtrado['valor'].sum()
+
+        st.metric(label="Valor Total", value=f"{round(patrimonio_filtrado_soma,2)}") 
         patrimonio_filtrado
 
     with st.expander('Status Emprestimos'):
