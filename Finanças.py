@@ -39,7 +39,8 @@ name, authentication_status, username = authenticator.login('Login', location='m
 
 
 if authentication_status:
-    
+    name = st.session_state["name"]
+    username = st.session_state["username"]
     st.title('Página de Organização Financeira')
 
     template_dash = "plotly_white"
