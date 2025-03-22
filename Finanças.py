@@ -22,13 +22,10 @@ st.set_page_config(
     layout="wide",  initial_sidebar_state='collapsed'
 )
     
-st.title('Página de Organização Financeira')
-
-template_dash = "plotly_white"
-bg_color_dash = "rgba(0,0,0,0)"
 
 
-with open('config_yam') as file:
+
+with open('config_yaml') as file:
     config = yaml.load(file, loader = SafeLoader)
 
 authenticator = stauth.Authenticate(
@@ -42,7 +39,10 @@ authenticator.login()
 
 if st.session_state['authentication_status']:
     
-    
+    st.title('Página de Organização Financeira')
+
+    template_dash = "plotly_white"
+    bg_color_dash = "rgba(0,0,0,0)"
     
     conn = st.connection("gsheets", type=GSheetsConnection)
     # Leia os dados da planilha
