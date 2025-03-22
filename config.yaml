@@ -1,12 +1,12 @@
 credentials:
   usernames:
     marcoscerqueira:
-      email: marcos.cerqueira087@gmail.com
-      logged in: False
-      name = Marcos Cerqueira
-      password:627267
+      email: "marcos.cerqueira087@gmail.com"
+      logged_in: False
+      name: "Marcos Cerqueira"
+      password: "627267"
 
-cookie;
-  expiry:days: 1
-  key = some_signature_key
-  name: some_cookie_name
+cookie:
+  expiry_days: 1
+  key: "some_signature_key"
+  name: "some_cookie_name"
