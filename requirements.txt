@@ -6,5 +6,6 @@ numpy
 plotly
 oauth2client
 st-gsheets-connection
-
+streamlit-authenticator
+pyyaml
 
