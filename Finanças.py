@@ -10,7 +10,7 @@ from streamlit_gsheets import GSheetsConnection
 from dateutil.relativedelta import relativedelta
 import streamlit_authenticator as stauth
 import yaml
-from yaml_loader import SafeLoader
+from yaml import SafeLoader
 
 
 
