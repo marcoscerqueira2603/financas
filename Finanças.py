@@ -35,9 +35,10 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days']
 )
 
-authenticator.login()
+name, authentication_status, username = authenticator.login('Login', 'main')
 
-if st.session_state['authentication_status']:
+
+if authentication_status:
     
     st.title('Página de Organização Financeira')
 
