@@ -447,6 +447,6 @@ if st.session_state['authentication_status']:
 
 
 elif st.session_state["authentication_status"] is False:
-    st.error['Usuário ou senha incorretos']
+    st.error("Usuário ou senha incorretos")
 elif st.session_state["authentication_status"] is None:
-    st.warning['Insira um usuário ou senha']
+    st.warning("Insira um usuário ou senha")
