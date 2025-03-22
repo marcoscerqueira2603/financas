@@ -19,7 +19,7 @@ st.set_page_config(
 
 
     
-
+authenticator.login()
 
 st.title('Página de Organização Financeira')
 
