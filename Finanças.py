@@ -32,7 +32,6 @@ conn = st.connection("gsheets", type=GSheetsConnection)
 # Leia os dados da planilha
 url_debito = st.secrets["connections"]["gsheets"]["url_extrato_debito"]
 url_credito = st.secrets["connections"]["gsheets"]["url_extrato_credito"]
-url_extrato_vr = st.secrets["connections"]["gsheets"]["url_extrato_vr"]
 url_receitas = st.secrets["connections"]["gsheets"]["url_extrato_receitas"]
 url_extrato_fixos =  st.secrets["connections"]["gsheets"]["url_extrato_fixos"]
 url_orcamento =  st.secrets["connections"]["gsheets"]["url_orcamento"]
@@ -48,7 +47,6 @@ receita = conn.read(spreadsheet= url_receitas, ttl=6000)
 fixo = conn.read(spreadsheet= url_extrato_fixos, ttl=6000)
 investimento = conn.read(spreadsheet= url_investimento, ttl=6000)
 emprestimo = conn.read(spreadsheet= url_emprestimos, ttl=6000)
-vr = conn.read(spreadsheet= url_extrato_vr, ttl=6000)
 patrimonio = conn.read(spreadsheet= url_patriomonio, ttl=6000)
 orcamento = conn.read(spreadsheet= url_orcamento, ttl=6000)
 
@@ -388,46 +386,6 @@ with st.expander('Empréstimos'):
 
     
 
-with st.expander('VR'):
-        st.title('VR')
-        novos_vrs = []
-        with st.form('form vr'):
-            #adicionando dados relativos a aba de débito: incluem a data, a classificação, o valor, a descrição
-
-            #a partir do calculo de data conseguimos ter o mes e jogamos lá
-            vr_mes_ref = st.selectbox('Selecione o mês referência:', ['01_2025','02_2025','03_2025','04_2025','05_2025','06_2025','07_2025',
-                                    '08_2025','09_2025','10_2025','11_2025','12_2025'], key='class-mesref_vr')
-
-            vr_data = st.text_input('Insirir Data',key = 'insirir-data-vr')
-            vr_descrição =  st.text_input('Insirir Descrição', key = 'insirir-descricao-vr')
-            vr_local =  st.text_input('Insirir Local', key = 'insirir-local-vr')
-            vr_classificacao = st.selectbox('Selecione o tipo:', ['Almoço no escritório','Saídas','Saídas - Pitica','Rua','Casa','Outros'], key='class-vr')
-            vr_valor = st.text_input('Insirir Valor', key = 'insirir-valor-vr')
-
-            if vr_valor == "":
-                vr_valor = 1.0
-            else:
-                vr_valor = vr_valor
-
-            vr_valor = float(vr_valor)
-
-            if vr_data  == "":
-                vr_data = "08/02/2000"
-            else:
-                vr_data = vr_data    
-
-
-
-            submit_button = st.form_submit_button("Adicionar VR")
-
-            if submit_button:
-                novo_vr = [ vr_data, vr_mes_ref, vr_descrição,vr_local,  vr_classificacao, vr_valor,2025]
-                novos_vrs.append(novo_vr)
-                novos_vrs_df = pd.DataFrame(novos_vrs, columns=['data', 'id_mes', 'descricao','local','classificacao','valor','ano'])
-
-                vr_concatenado = pd.concat([vr, novos_vrs_df], ignore_index=True)
-                
-                conn.update(spreadsheet= url_extrato_vr, data=vr_concatenado)
 
 
 
