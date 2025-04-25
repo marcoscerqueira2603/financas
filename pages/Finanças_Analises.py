@@ -33,7 +33,6 @@ conn = st.connection("gsheets", type=GSheetsConnection)
 # Leia os dados da planilha
 url_debito = st.secrets["connections"]["gsheets"]["url_extrato_debito"]
 url_credito = st.secrets["connections"]["gsheets"]["url_extrato_credito"]
-url_extrato_vr = st.secrets["connections"]["gsheets"]["url_extrato_vr"]
 url_receitas = st.secrets["connections"]["gsheets"]["url_extrato_receitas"]
 url_extrato_fixos =  st.secrets["connections"]["gsheets"]["url_extrato_fixos"]
 url_orcamento =  st.secrets["connections"]["gsheets"]["url_orcamento"]
@@ -49,7 +48,6 @@ receita = conn.read(spreadsheet= url_receitas, ttl=360)
 fixo = conn.read(spreadsheet= url_extrato_fixos, ttl=360)
 investimento = conn.read(spreadsheet= url_investimento, ttl=360)
 emprestimo = conn.read(spreadsheet= url_emprestimos, ttl=360)
-vr = conn.read(spreadsheet= url_extrato_vr, ttl=360)
 patrimonio = conn.read(spreadsheet= url_patriomonio, ttl=360)
 orcamento = conn.read(spreadsheet= url_orcamento, ttl=360)
 
